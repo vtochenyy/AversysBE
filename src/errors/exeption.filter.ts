@@ -8,6 +8,7 @@ export class ExeptionFilter implements IExeptionFilter {
 
 	constructor(logger: LoggerService) {
 		this.logger = logger;
+		this.logger.log('Зарегистрирован обрбаотчик ошибок');
 	}
 
 	catch(err: Error | HttpError, req: Request, res: Response, next: NextFunction) {
