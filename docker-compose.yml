@@ -8,16 +8,10 @@ services:
       POSTGRES_PASSWORD: "postgres123321"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - ../2. Init Database:/docker-entrypoint-initdb.d
-      - .:/var/lib/postgresql/data
+      - ./db/entry:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U habrpguser -d habrdb" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
     restart: unless-stopped
     deploy:
       resources:
