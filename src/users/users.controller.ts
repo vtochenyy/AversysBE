@@ -19,7 +19,7 @@ export class UsersController extends BaseController {
 			},
 			{
 				path: '/test',
-				method: 'get',
+				method: 'post',
 				func: (req, res, next) => {
 					next(new HttpError(401, 'test error msg', 'UserController'));
 				},
