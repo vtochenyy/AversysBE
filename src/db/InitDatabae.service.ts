@@ -8,8 +8,8 @@ export class InitDatabase implements IInitDatabase {
 
 	constructor(logger: LoggerService) {
 		this.logger = logger;
-		this.connect();
-		this.testConnection();
+		// this.connect();
+		// this.testConnection();
 	}
 
 	public connect() {
@@ -21,6 +21,7 @@ export class InitDatabase implements IInitDatabase {
 			dialect: 'postgres',
 			host: 'localhost',
 		});
+		this.testConnection();
 	}
 
 	public async testConnection() {

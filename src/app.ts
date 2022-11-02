@@ -45,6 +45,7 @@ export class App {
 			this.logger.log(`Server running at port: ${this.port}`);
 			this.useRoutes();
 			this.useExeptionFilters();
+			this.initDatabase.connect();
 		});
 	}
 }
