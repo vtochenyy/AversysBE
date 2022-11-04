@@ -6,11 +6,11 @@ import { UsersController } from './users/users.controller';
 
 async function bootstrap() {
 	const logger = new LoggerService();
+	const dataBase = new InitDatabase(logger);
 	const app = new App(
 		logger,
-		new UsersController(logger),
-		new ExeptionFilter(logger),
-		new InitDatabase(logger)
+		new UsersController(logger, dataBase.DBSchema),
+		new ExeptionFilter(logger)
 	);
 	await app.init();
 }

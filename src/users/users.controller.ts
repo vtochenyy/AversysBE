@@ -3,8 +3,10 @@ import { HttpError } from '../errors/http-error.class';
 import { LoggerService } from '../logger/logger.service';
 
 export class UsersController extends BaseController {
-	constructor(logger: LoggerService) {
+	DBSchema: any;
+	constructor(logger: LoggerService, DBSchema: {}) {
 		super(logger);
+		this.DBSchema = DBSchema;
 		this.bindUserAPI();
 	}
 
@@ -13,15 +15,25 @@ export class UsersController extends BaseController {
 			{
 				path: '/all',
 				method: 'get',
-				func: (req, res, next) => {
-					res.status(200).send(['Vasya', 'Adam', 12]);
+				func: async (req, res, next) => {
+					const users = await this.DBSchema.User.findAll();
+					res.status(200).send(users);
 				},
 			},
 			{
-				path: '/test',
+				path: '/testUser',
 				method: 'post',
-				func: (req, res, next) => {
-					next(new HttpError(401, 'test error msg', 'UserController'));
+				func: async (req, res, next) => {
+					try {
+						const user = await this.DBSchema.User.create({
+							firstName: 'Test',
+							lastName: 'Testovich',
+							age: 12,
+						});
+						res.status(200).send({ id: user.id });
+					} catch (error) {
+						new HttpError(500, 'Ошибка обработки запроса', '/testUser');
+					}
 				},
 			},
 		]);

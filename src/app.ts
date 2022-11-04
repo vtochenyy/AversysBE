@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import { Server } from 'http';
 import { InitDatabase } from './db/InitDatabae.service';
 import { ExeptionFilter } from './errors/exeption.filter';
@@ -12,25 +12,22 @@ export class App {
 	logger: LoggerService;
 	usersController: UsersController;
 	exeptionFilter: ExeptionFilter;
-	initDatabase: InitDatabase;
 
 	constructor(
 		logger: LoggerService,
 		usersController: UsersController,
-		exeptionFilter: ExeptionFilter,
-		initDatabase: InitDatabase
+		exeptionFilter: ExeptionFilter
 	) {
 		this.app = express();
 		this.port = 9876;
 		this.logger = logger;
 		this.usersController = usersController;
 		this.exeptionFilter = exeptionFilter;
-		this.initDatabase = initDatabase;
 	}
 
 	public useRoutes() {
-		this.app.use((req, res, next) => {
-			this.logger.log('Перехвачен исходящий запрос');
+		this.app.use((req: Request, res: Response, next: NextFunction) => {
+			this.logger.log('Получен исходящий запрос');
 			next();
 		});
 		this.app.use('/users', this.usersController.router);
@@ -45,7 +42,6 @@ export class App {
 			this.logger.log(`Server running at port: ${this.port}`);
 			this.useRoutes();
 			this.useExeptionFilters();
-			this.initDatabase.connect();
 		});
 	}
 }
