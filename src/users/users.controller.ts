@@ -1,6 +1,7 @@
 import { BaseController } from '../common/base.controller';
 import { HttpError } from '../errors/http-error.class';
 import { LoggerService } from '../logger/logger.service';
+import { UserService } from './users.service';
 
 export class UsersController extends BaseController {
 	DBSchema: any;
@@ -25,12 +26,8 @@ export class UsersController extends BaseController {
 				method: 'post',
 				func: async (req, res, next) => {
 					try {
-						const user = await this.DBSchema.User.create({
-							firstName: 'Test',
-							lastName: 'Testovich',
-							age: 12,
-						});
-						res.status(200).send({ id: user.id });
+						let result = await new UserService().createRecord(req.body, this.DBSchema.User);
+						res.status(200).send(result);
 					} catch (error) {
 						new HttpError(500, 'Ошибка обработки запроса', '/testUser');
 					}
