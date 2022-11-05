@@ -25,11 +25,15 @@ export class UsersController extends BaseController {
 				path: '/testUser',
 				method: 'post',
 				func: async (req, res, next) => {
-					try {
-						let result = await new UserService().createRecord(req.body, this.DBSchema.User);
-						res.status(200).send(result);
-					} catch (error) {
-						new HttpError(500, 'Ошибка обработки запроса', '/testUser');
+					if (!!req.body.firstName && !!req.body.firstName && !!req.body.firstName) {
+						try {
+							let result = await new UserService().createRecord(req.body, this.DBSchema.User);
+							res.status(200).send(result);
+						} catch (error) {
+							new HttpError(500, 'Ошибка обработки запроса', '/testUser');
+						}
+					} else {
+						res.send(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
 					}
 				},
 			},
