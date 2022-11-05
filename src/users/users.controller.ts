@@ -5,9 +5,11 @@ import { UserService } from './users.service';
 
 export class UsersController extends BaseController {
 	DBSchema: any;
+	userService: UserService;
 	constructor(logger: LoggerService, DBSchema: {}) {
 		super(logger);
 		this.DBSchema = DBSchema;
+		this.userService = new UserService();
 		this.bindUserAPI();
 	}
 
@@ -27,8 +29,32 @@ export class UsersController extends BaseController {
 				func: async (req, res, next) => {
 					if (!!req.body.firstName && !!req.body.lastName && !!req.body.age) {
 						try {
-							let result = await new UserService().createRecord(req.body, this.DBSchema.User);
+							let result = await this.userService.createRecord.bind(this.userService)(
+								req.body,
+								this.DBSchema.User,
+								next
+							);
 							res.status(200).send(result);
+						} catch (error) {
+							next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
+						}
+					} else {
+						next(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
+					}
+				},
+			},
+			{
+				path: '/findById',
+				method: 'post',
+				func: async (req, res, next) => {
+					if (!!req.body.id) {
+						try {
+							let result = await this.userService.getUserById.bind(this.userService)(
+								req.body.id,
+								this.DBSchema.User,
+								next
+							);
+							!!result && res.status(200).send(result);
 						} catch (error) {
 							next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
 						}
