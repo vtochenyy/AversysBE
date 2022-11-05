@@ -30,10 +30,10 @@ export class UsersController extends BaseController {
 							let result = await new UserService().createRecord(req.body, this.DBSchema.User);
 							res.status(200).send(result);
 						} catch (error) {
-							new HttpError(500, 'Ошибка обработки запроса', '/testUser');
+							next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
 						}
 					} else {
-						res.send(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
+						next(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
 					}
 				},
 			},
