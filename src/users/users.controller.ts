@@ -22,10 +22,10 @@ export class UsersController extends BaseController {
 				},
 			},
 			{
-				path: '/testUser',
+				path: '/create',
 				method: 'post',
 				func: async (req, res, next) => {
-					if (!!req.body.firstName && !!req.body.firstName && !!req.body.firstName) {
+					if (!!req.body.firstName && !!req.body.lastName && !!req.body.age) {
 						try {
 							let result = await new UserService().createRecord(req.body, this.DBSchema.User);
 							res.status(200).send(result);
