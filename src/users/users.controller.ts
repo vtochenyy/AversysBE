@@ -6,10 +6,10 @@ import { UserService } from './users.service';
 export class UsersController extends BaseController {
 	DBSchema: any;
 	userService: UserService;
-	constructor(logger: LoggerService, DBSchema: {}) {
+	constructor(logger: LoggerService, DBSchema: {}, userService: UserService) {
 		super(logger);
 		this.DBSchema = DBSchema;
-		this.userService = new UserService();
+		this.userService = userService;
 		this.bindUserAPI();
 	}
 
@@ -19,8 +19,8 @@ export class UsersController extends BaseController {
 				path: '/all',
 				method: 'get',
 				func: async (req, res, next) => {
-					const users = await this.DBSchema.User.findAll();
-					res.status(200).send(users);
+					const users = await this.userService.findAll.bind(this.userService)(this.DBSchema.User, next);
+					!!users && res.status(200).send(users);
 				},
 			},
 			{

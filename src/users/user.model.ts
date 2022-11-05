@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 import { LoggerService } from '../logger/logger.service';
 
 export class UserModel {
@@ -10,7 +10,7 @@ export class UserModel {
 		this.sequelize = sequelize;
 		this.logger = logger;
 		try {
-			this.User = this.sequelize.define('User', {
+			this.User = this.sequelize.define('Users', {
 				firstName: DataTypes.STRING,
 				lastName: DataTypes.STRING,
 				age: DataTypes.INTEGER,

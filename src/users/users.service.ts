@@ -12,6 +12,19 @@ export class UserService {
 		}
 	}
 
+	async findAll(userEntity: any, next: NextFunction) {
+		try {
+			const users = await userEntity.findAll();
+			if (users.length == 0) {
+				throw new Error();
+			} else {
+				return users;
+			}
+		} catch (error) {
+			next(new HttpError(500, 'Records no found in table: Users', 'UserService'));
+		}
+	}
+
 	async getUserById(userID: string, userEntity: any, next: NextFunction) {
 		try {
 			const user = await userEntity.findAll({
