@@ -1,11 +1,12 @@
 import { NextFunction } from 'express';
+import { BaseService } from '../common/base.service';
 import { HttpError } from '../errors/http-error.class';
 import { IUserDto } from './user.dto.interface';
 
-export class UserService {
+export class UserService extends BaseService {
 	async createRecord(params: IUserDto, userEntity: any, next: NextFunction) {
 		try {
-			const user = await userEntity.create(params);
+			const user = await this.dataAccessProvider.createRecord(params, userEntity, next);
 			return { id: user.id };
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'UserService'));
@@ -14,7 +15,7 @@ export class UserService {
 
 	async findAll(userEntity: any, next: NextFunction) {
 		try {
-			const users = await userEntity.findAll();
+			const users = await this.dataAccessProvider.getAllRecords(userEntity, next);
 			if (users.length == 0) {
 				throw new Error();
 			} else {
@@ -27,11 +28,7 @@ export class UserService {
 
 	async getUserById(userID: string, userEntity: any, next: NextFunction) {
 		try {
-			const user = await userEntity.findAll({
-				where: {
-					id: userID,
-				},
-			});
+			const user = await this.dataAccessProvider.getRecordByID(userID, userEntity, next);
 			if (user.length == 0) {
 				throw new Error();
 			} else {
