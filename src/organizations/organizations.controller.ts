@@ -56,6 +56,20 @@ export class OrganizationsController extends BaseController {
 					}
 				},
 			},
+			{
+				path: '/findByParams',
+				method: 'post',
+				func: async (req, res, next) => {
+					try {
+						const users = await this.organzationsService.findByParams.bind(
+							this.organzationsService
+						)(req.body, this.DBSchema.Organization, next);
+						!!users && res.status(200).send(users);
+					} catch (error) {
+						next(new HttpError(500, 'Ошибка обработки запроса', '/org/create'));
+					}
+				},
+			},
 		]);
 	}
 }

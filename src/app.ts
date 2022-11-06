@@ -1,6 +1,5 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { Server } from 'http';
-import { InitDatabase } from './db/InitDatabae.service';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { LoggerService } from './logger/logger.service';
 import { OrganizationsController } from './organizations/organizations.controller';
