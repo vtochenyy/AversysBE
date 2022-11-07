@@ -15,7 +15,11 @@ export class OrganizationModel {
 					primaryKey: true,
 					type: DataTypes.UUID,
 				},
-				expanseId: DataTypes.UUID,
+				expanseId: {
+					allowNull: false,
+					unique: true,
+					type: DataTypes.UUID,
+				},
 				organizationName: DataTypes.STRING,
 				organizationAbbr: DataTypes.STRING,
 				organizationType: DataTypes.ENUM('commerce', 'non-commerce'),

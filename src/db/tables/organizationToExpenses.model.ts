@@ -13,6 +13,8 @@ export class OrganizationToExpensesModel {
 			this.OrganizationToExpenses = this.sequelize.define('OrganizationToExpenses', {
 				id: {
 					primaryKey: true,
+					unique: true,
+					allowNull: false,
 					type: DataTypes.UUID,
 				},
 				logisticId: DataTypes.UUID,
