@@ -11,6 +11,10 @@ export class UserModel {
 		this.logger = logger;
 		try {
 			this.User = this.sequelize.define('Users', {
+				id: {
+					primaryKey: true,
+					type: DataTypes.UUID,
+				},
 				firstName: DataTypes.STRING,
 				lastName: DataTypes.STRING,
 				age: DataTypes.INTEGER,
