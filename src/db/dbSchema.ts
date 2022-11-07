@@ -8,8 +8,8 @@ export class DBschema {
 	sequelize: Sequelize;
 	logger: LoggerService;
 	User: unknown;
-	Organization: unknown;
-	OrganizationToExpenses: unknown;
+	Organization: any;
+	OrganizationToExpenses: any;
 	OrganizationToIncome: unknown;
 	LogisticExpenses: unknown;
 	StuffExpenses: unknown;
@@ -35,6 +35,8 @@ export class DBschema {
 			this.sequelize,
 			this.logger
 		).OrganizationToExpenses;
+		this.OrganizationToExpenses.hasOne(this.Organization, { foreignKey: 'expanseId' });
+		// this.OrganizationToExpenses.belongsTo(this.Organization);
 		return {
 			User: this.User,
 			Organization: this.Organization,

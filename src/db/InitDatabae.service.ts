@@ -33,6 +33,6 @@ export class InitDatabase implements IInitDatabase {
 
 	public genericTables() {
 		this.DBSchema = new DBschema(this.sequelize, this.logger).genenericAllTables();
-		this.sequelize.sync({ force: false });
+		this.sequelize.sync({ force: true });
 	}
 }
