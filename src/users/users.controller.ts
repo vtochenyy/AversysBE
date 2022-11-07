@@ -16,14 +16,19 @@ export class UsersController extends BaseController {
 	public bindUserAPI() {
 		this.bindRoutes([
 			{
+				root: '/users',
 				path: '/all',
 				method: 'get',
 				func: async (req, res, next) => {
-					const users = await this.userService.findAll.bind(this.userService)(this.DBSchema.User, next);
+					const users = await this.userService.findAll.bind(this.userService)(
+						this.DBSchema.User,
+						next
+					);
 					!!users && res.status(200).send(users);
 				},
 			},
 			{
+				root: '/users',
 				path: '/create',
 				method: 'post',
 				func: async (req, res, next) => {
@@ -44,6 +49,7 @@ export class UsersController extends BaseController {
 				},
 			},
 			{
+				root: '/users',
 				path: '/findById',
 				method: 'post',
 				func: async (req, res, next) => {

@@ -20,6 +20,7 @@ export class OrganizationsController extends BaseController {
 	public bindUserAPI() {
 		this.bindRoutes([
 			{
+				root: '/org',
 				path: '/create',
 				method: 'post',
 				func: async (req, res, next) => {
@@ -47,6 +48,7 @@ export class OrganizationsController extends BaseController {
 				},
 			},
 			{
+				root: '/org',
 				path: '/all',
 				method: 'get',
 				func: async (req, res, next) => {
@@ -62,6 +64,7 @@ export class OrganizationsController extends BaseController {
 				},
 			},
 			{
+				root: '/org',
 				path: '/findByParams',
 				method: 'post',
 				func: async (req, res, next) => {
