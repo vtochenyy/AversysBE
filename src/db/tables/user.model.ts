@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from '../../logger/logger.service';
 
 export class UserModel {
 	logger: LoggerService;

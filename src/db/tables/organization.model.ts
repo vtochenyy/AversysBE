@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from '../../logger/logger.service';
 
 export class OrganizationModel {
 	logger: LoggerService;
@@ -11,6 +11,11 @@ export class OrganizationModel {
 		this.logger = logger;
 		try {
 			this.Organization = this.sequelize.define('Organizaions', {
+				id: {
+					primaryKey: true,
+					type: DataTypes.UUID,
+				},
+				expanseId: DataTypes.UUID,
 				organizationName: DataTypes.STRING,
 				organizationAbbr: DataTypes.STRING,
 				organizationType: DataTypes.ENUM('commerce', 'non-commerce'),

@@ -7,11 +7,17 @@ export class OrganizationService extends BaseService {
 	async createRecord(
 		params: IOrganizationDto,
 		organizationEntity: any,
+		organizationToExpansesEnity: any,
 		next: NextFunction
 	) {
 		try {
+			const organizationToExpanses = await this.dataAccessProvider.createRecord(
+				{},
+				organizationToExpansesEnity,
+				next
+			);
 			const organization = await this.dataAccessProvider.createRecord(
-				params,
+				{ ...params, expanseId: organizationToExpanses.id },
 				organizationEntity,
 				next
 			);

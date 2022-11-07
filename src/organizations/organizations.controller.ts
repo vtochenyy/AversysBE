@@ -31,7 +31,12 @@ export class OrganizationsController extends BaseController {
 						try {
 							const users = await this.organzationsService.createRecord.bind(
 								this.organzationsService
-							)(req.body, this.DBSchema.Organization, next);
+							)(
+								req.body,
+								this.DBSchema.Organization,
+								this.DBSchema.OrganizationToExpenses,
+								next
+							);
 							!!users && res.status(200).send(users);
 						} catch (error) {
 							next(new HttpError(500, 'Ошибка обработки запроса', '/org/create'));
