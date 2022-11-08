@@ -4,6 +4,8 @@ import { ExeptionFilter } from './errors/exeption.filter';
 import { LoggerService } from './logger/logger.service';
 import { OrganizationsController } from './organizations/organizations.controller';
 import { UsersController } from './users/users.controller';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../backendAPI.json';
 
 export class App {
 	app: Express;
@@ -38,6 +40,10 @@ export class App {
 		this.app.use('/org', this.organizationController.router);
 	}
 
+	public useSwagger() {
+		this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+	}
+
 	public useExeptionFilters() {
 		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
 	}
@@ -45,6 +51,7 @@ export class App {
 	public async init() {
 		this.server = this.app.listen(this.port, () => {
 			this.logger.log(`Server running at port: ${this.port}`);
+			this.useSwagger();
 			this.useRoutes();
 			this.useExeptionFilters();
 		});

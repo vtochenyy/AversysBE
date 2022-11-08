@@ -7,17 +7,17 @@ import { OrganizationToExpensesModel } from './tables/organizationToExpenses.mod
 export class DBschema {
 	sequelize: Sequelize;
 	logger: LoggerService;
-	User: unknown;
+	User: any;
 	Organization: any;
 	OrganizationToExpenses: any;
-	OrganizationToIncome: unknown;
-	LogisticExpenses: unknown;
-	StuffExpenses: unknown;
-	CrudeExpenses: unknown;
-	IvnestingExpenses: unknown;
-	ServiceIncomes: unknown;
-	ProductsIncomes: unknown;
-	InvestingIncomes: unknown;
+	OrganizationToIncome: any;
+	LogisticExpenses: any;
+	StuffExpenses: any;
+	CrudeExpenses: any;
+	IvnestingExpenses: any;
+	ServiceIncomes: any;
+	ProductsIncomes: any;
+	InvestingIncomes: any;
 
 	constructor(sequelize: Sequelize, logger: LoggerService) {
 		this.sequelize = sequelize;
