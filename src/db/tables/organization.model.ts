@@ -1,18 +1,20 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { LoggerService } from '../../logger/logger.service';
+import { injectable, inject } from 'inversify';
+import { TYPES } from '../../types';
+import { ILogger } from '../../logger/logger.interface';
+import 'reflect-metadata';
 
 export class OrganizationModel {
-	logger: LoggerService;
 	sequelize: Sequelize;
 	Organization: unknown;
 
-	constructor(sequelize: Sequelize, logger: LoggerService) {
+	constructor(sequelize: Sequelize, @inject(TYPES.ILogger) private logger: ILogger) {
 		this.sequelize = sequelize;
-		this.logger = logger;
 		try {
 			this.Organization = this.sequelize.define('Organizaions', {
 				id: {
 					primaryKey: true,
+					unique: true,
 					type: DataTypes.UUID,
 				},
 				expanseId: {

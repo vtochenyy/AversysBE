@@ -1,15 +1,16 @@
 import { Sequelize } from 'sequelize';
-import { LoggerService } from '../logger/logger.service';
+import { injectable, inject } from 'inversify';
 import { DBschema } from './dbSchema';
-import { IInitDatabase } from './initDatabase.interface';
+import { TYPES } from '../types';
+import { ILogger } from '../logger/logger.interface';
+import 'reflect-metadata';
 
-export class InitDatabase implements IInitDatabase {
+@injectable()
+export class InitDatabase {
 	sequelize: Sequelize;
-	logger: LoggerService;
-	DBSchema: {};
+	DBSchema: any;
 
-	constructor(logger: LoggerService) {
-		this.logger = logger;
+	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		this.sequelize = new Sequelize({
 			port: 5432,
 			database: 'weatherDB',

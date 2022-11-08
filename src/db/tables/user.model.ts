@@ -1,14 +1,14 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { LoggerService } from '../../logger/logger.service';
+import { injectable, inject } from 'inversify';
+import { ILogger } from '../../logger/logger.interface';
+import { TYPES } from '../../types';
 
 export class UserModel {
-	logger: LoggerService;
 	sequelize: Sequelize;
 	User: unknown;
 
-	constructor(sequelize: Sequelize, logger: LoggerService) {
+	constructor(sequelize: Sequelize, @inject(TYPES.ILogger) private logger: ILogger) {
 		this.sequelize = sequelize;
-		this.logger = logger;
 		try {
 			this.User = this.sequelize.define('Users', {
 				id: {

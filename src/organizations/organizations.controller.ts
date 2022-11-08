@@ -1,20 +1,23 @@
 import { BaseController } from '../common/base.controller';
+import { InitDatabase } from '../db/InitDatabae.service';
+import { injectable, inject } from 'inversify';
 import { HttpError } from '../errors/http-error.class';
+import { ILogger } from '../logger/logger.interface';
 import { LoggerService } from '../logger/logger.service';
+import { TYPES } from '../types';
 import { OrganizationService } from './organization.service';
+import 'reflect-metadata';
 
 export class OrganizationsController extends BaseController {
 	DBSchema: any;
-	organzationsService: OrganizationService;
 
 	constructor(
-		logger: LoggerService,
-		DBSchema: {},
-		organzationsService: OrganizationService
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.DataBase) private DataBase: InitDatabase,
+		@inject(TYPES.OrganizationService) private OrganizationService: OrganizationService
 	) {
-		super(logger);
-		this.DBSchema = DBSchema;
-		this.organzationsService = organzationsService;
+		super(loggerService);
+		this.DBSchema = DataBase.DBSchema;
 		this.bindUserAPI();
 	}
 	public bindUserAPI() {
@@ -30,8 +33,8 @@ export class OrganizationsController extends BaseController {
 						!!req.body.organizationType
 					) {
 						try {
-							const users = await this.organzationsService.createRecord.bind(
-								this.organzationsService
+							const users = await this.OrganizationService.createRecord.bind(
+								this.OrganizationService
 							)(
 								req.body,
 								this.DBSchema.Organization,
@@ -53,7 +56,7 @@ export class OrganizationsController extends BaseController {
 				method: 'get',
 				func: async (req, res, next) => {
 					try {
-						const users = await this.organzationsService.findAll.bind(this.organzationsService)(
+						const users = await this.OrganizationService.findAll.bind(this.OrganizationService)(
 							this.DBSchema.Organization,
 							next
 						);
@@ -69,8 +72,8 @@ export class OrganizationsController extends BaseController {
 				method: 'post',
 				func: async (req, res, next) => {
 					try {
-						const users = await this.organzationsService.findByParams.bind(
-							this.organzationsService
+						const users = await this.OrganizationService.findByParams.bind(
+							this.OrganizationService
 						)(req.body, this.DBSchema.Organization, next);
 						!!users && res.status(200).send(users);
 					} catch (error) {

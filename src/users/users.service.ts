@@ -2,7 +2,10 @@ import { NextFunction } from 'express';
 import { BaseService } from '../common/base.service';
 import { HttpError } from '../errors/http-error.class';
 import { IUserDto } from './user.dto.interface';
+import { injectable, inject } from 'inversify';
+import 'reflect-metadata';
 
+@injectable()
 export class UserService extends BaseService {
 	async createRecord(params: IUserDto, userEntity: any, next: NextFunction) {
 		try {

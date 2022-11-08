@@ -19,6 +19,7 @@
 		"inversify": "^6.0.1",
 		"pg": "^8.8.0",
 		"pg-hstore": "^2.3.4",
+		"reflect-metadata": "^0.1.13",
 		"sequelize": "^6.25.3",
 		"swagger-ui-express": "^4.6.0",
 		"tslog": "^3.3.4",

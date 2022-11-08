@@ -1,33 +1,30 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { Server } from 'http';
 import { ExeptionFilter } from './errors/exeption.filter';
-import { LoggerService } from './logger/logger.service';
 import { OrganizationsController } from './organizations/organizations.controller';
+import { injectable, inject } from 'inversify';
 import { UsersController } from './users/users.controller';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../backendAPI.json';
+import { TYPES } from './types';
+import { ILogger } from './logger/logger.interface';
+import 'reflect-metadata';
 
+@injectable()
 export class App {
 	app: Express;
 	server: Server;
 	port: number;
-	logger: LoggerService;
-	usersController: UsersController;
-	organizationController: OrganizationsController;
-	exeptionFilter: ExeptionFilter;
 
 	constructor(
-		logger: LoggerService,
-		usersController: UsersController,
-		organizationController: OrganizationsController,
-		exeptionFilter: ExeptionFilter
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.UsersController) private usersController: UsersController,
+		@inject(TYPES.OrganizationsController)
+		private organizationController: OrganizationsController,
+		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter
 	) {
 		this.app = express();
 		this.port = 9876;
-		this.logger = logger;
-		this.usersController = usersController;
-		this.organizationController = organizationController;
-		this.exeptionFilter = exeptionFilter;
 	}
 
 	public useRoutes() {

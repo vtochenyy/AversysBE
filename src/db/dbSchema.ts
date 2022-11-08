@@ -1,12 +1,14 @@
 import { UserModel } from './tables/user.model';
+import { injectable, inject } from 'inversify';
 import { Sequelize, Model } from 'sequelize';
-import { LoggerService } from '../logger/logger.service';
 import { OrganizationModel } from './tables/organization.model';
 import { OrganizationToExpensesModel } from './tables/organizationToExpenses.model';
+import { ILogger } from '../logger/logger.interface';
+import { TYPES } from '../types';
+import 'reflect-metadata';
 
 export class DBschema {
 	sequelize: Sequelize;
-	logger: LoggerService;
 	User: any;
 	Organization: any;
 	OrganizationToExpenses: any;
@@ -19,9 +21,8 @@ export class DBschema {
 	ProductsIncomes: any;
 	InvestingIncomes: any;
 
-	constructor(sequelize: Sequelize, logger: LoggerService) {
+	constructor(sequelize: Sequelize, @inject(TYPES.ILogger) private logger: ILogger) {
 		this.sequelize = sequelize;
-		this.logger = logger;
 	}
 
 	public genenericAllTables(): {
@@ -29,15 +30,15 @@ export class DBschema {
 		Organization: any;
 		OrganizationToExpenses: any;
 	} {
-		this.User = new UserModel(this.sequelize, this.logger).User;
-		this.Organization = new OrganizationModel(this.sequelize, this.logger).Organization;
 		this.OrganizationToExpenses = new OrganizationToExpensesModel(
 			this.sequelize,
 			this.logger
 		).OrganizationToExpenses;
+		this.Organization = new OrganizationModel(this.sequelize, this.logger).Organization;
+		this.User = new UserModel(this.sequelize, this.logger).User;
+
 		this.OrganizationToExpenses.hasOne(this.Organization, { foreignKey: 'expanseId' });
 		this.Organization.hasOne(this.User, { foreignKey: 'orgId' });
-		// this.OrganizationToExpenses.belongsTo(this.Organization);
 		return {
 			User: this.User,
 			Organization: this.Organization,
