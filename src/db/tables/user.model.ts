@@ -15,6 +15,7 @@ export class UserModel {
 					primaryKey: true,
 					type: DataTypes.UUID,
 				},
+				orgId: DataTypes.UUID,
 				firstName: DataTypes.STRING,
 				lastName: DataTypes.STRING,
 				age: DataTypes.INTEGER,

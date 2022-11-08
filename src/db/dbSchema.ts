@@ -36,6 +36,7 @@ export class DBschema {
 			this.logger
 		).OrganizationToExpenses;
 		this.OrganizationToExpenses.hasOne(this.Organization, { foreignKey: 'expanseId' });
+		this.Organization.hasOne(this.User, { foreignKey: 'orgId' });
 		// this.OrganizationToExpenses.belongsTo(this.Organization);
 		return {
 			User: this.User,
