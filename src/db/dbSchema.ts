@@ -1,11 +1,8 @@
 import { UserModel } from './tables/user.model';
-import { injectable, inject } from 'inversify';
-import { Sequelize, Model } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { OrganizationModel } from './tables/organization.model';
 import { OrganizationToExpensesModel } from './tables/organizationToExpenses.model';
 import { ILogger } from '../logger/logger.interface';
-import { TYPES } from '../types';
-import 'reflect-metadata';
 
 export class DBschema {
 	sequelize: Sequelize;
@@ -21,7 +18,7 @@ export class DBschema {
 	ProductsIncomes: any;
 	InvestingIncomes: any;
 
-	constructor(sequelize: Sequelize, @inject(TYPES.ILogger) private logger: ILogger) {
+	constructor(sequelize: Sequelize, private logger: ILogger) {
 		this.sequelize = sequelize;
 	}
 

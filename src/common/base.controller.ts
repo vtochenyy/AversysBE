@@ -19,7 +19,7 @@ export abstract class BaseController {
 
 	protected bindRoutes(routes: IControllerRoute[]) {
 		for (const route of routes) {
-			this.logger.log(`[${route.method}] ${route.root + route.path}`);
+			this.logger.log(`Обрабатыватся эндпоинт [${route.method}] ${route.root + route.path}`);
 			const keppContext = route.func.bind(this);
 			this.router[route.method](route.path, keppContext);
 		}

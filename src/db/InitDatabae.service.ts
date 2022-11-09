@@ -19,21 +19,13 @@ export class InitDatabase {
 			dialect: 'postgres',
 			host: 'localhost',
 		});
-		this.testConnection();
-	}
-
-	public testConnection() {
 		try {
 			this.sequelize.authenticate();
 			this.logger.log(`Connected to database`);
-			this.genericTables();
+			this.DBSchema = new DBschema(this.sequelize, this.logger).genenericAllTables();
+			this.sequelize.sync({ force: true });
 		} catch (error) {
 			this.logger.err(`Failed to coonnet to database: ${error}`);
 		}
-	}
-
-	public genericTables() {
-		this.DBSchema = new DBschema(this.sequelize, this.logger).genenericAllTables();
-		this.sequelize.sync({ force: true });
 	}
 }

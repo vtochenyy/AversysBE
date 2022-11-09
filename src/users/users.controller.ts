@@ -11,8 +11,8 @@ import 'reflect-metadata';
 export class UsersController extends BaseController {
 	DBSchema: any;
 	constructor(
-		@inject(TYPES.ILogger) private loggerService: ILogger,
-		@inject(TYPES.DataBase) private DataBase: InitDatabase,
+		@inject(TYPES.ILogger) loggerService: ILogger,
+		@inject(TYPES.DataBase) DataBase: InitDatabase,
 		@inject(TYPES.UserService) private UserService: UserService
 	) {
 		super(loggerService);

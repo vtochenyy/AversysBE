@@ -3,7 +3,6 @@ import { InitDatabase } from '../db/InitDatabae.service';
 import { injectable, inject } from 'inversify';
 import { HttpError } from '../errors/http-error.class';
 import { ILogger } from '../logger/logger.interface';
-import { LoggerService } from '../logger/logger.service';
 import { TYPES } from '../types';
 import { OrganizationService } from './organization.service';
 import 'reflect-metadata';
@@ -12,8 +11,8 @@ export class OrganizationsController extends BaseController {
 	DBSchema: any;
 
 	constructor(
-		@inject(TYPES.ILogger) private loggerService: ILogger,
-		@inject(TYPES.DataBase) private DataBase: InitDatabase,
+		@inject(TYPES.ILogger) loggerService: ILogger,
+		@inject(TYPES.DataBase) DataBase: InitDatabase,
 		@inject(TYPES.OrganizationService) private OrganizationService: OrganizationService
 	) {
 		super(loggerService);
