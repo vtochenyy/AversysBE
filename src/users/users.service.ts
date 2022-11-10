@@ -27,11 +27,6 @@ export class UserService extends BaseService {
 			params.password = await hash(params.password, salt);
 			const mark2 = performance.now();
 			this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
-			let check = await compare(
-				'my_password',
-				'$2a$15$CtMTYKS/Z33w2YHfs1X84eJ0vim9whKX.N2DdqRMZkhRlMBdnvQYO'
-			);
-			this.logger.debug(`Сопоставление паролей ${check}`);
 			const user = await this.accessProvider.createRecord(params, userEntity, next);
 			return baseAnswer(200, { id: user.id }, []);
 		} catch (error) {
