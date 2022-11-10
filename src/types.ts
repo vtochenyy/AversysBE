@@ -8,4 +8,5 @@ export const TYPES = {
 	UserService: Symbol.for('UserService'),
 	OrganizationService: Symbol.for('OrganizationService'),
 	DataAccessProvider: Symbol.for('DataAcessProvider'),
+	ConfigService: Symbol.for('ConfigService'),
 };

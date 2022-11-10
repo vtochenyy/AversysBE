@@ -9,6 +9,7 @@ import swaggerDocument from '../backendAPI.json';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
 import 'reflect-metadata';
+import { ConfigService } from './config/config.service';
 
 @injectable()
 export class App {
@@ -19,6 +20,7 @@ export class App {
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
 		@inject(TYPES.UsersController) private usersController: UsersController,
+		@inject(TYPES.ConfigService) private configService: ConfigService,
 		@inject(TYPES.OrganizationsController)
 		private organizationController: OrganizationsController,
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter
