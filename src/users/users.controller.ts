@@ -39,7 +39,12 @@ export class UsersController extends BaseController {
 				path: '/create',
 				method: 'post',
 				func: async (req, res, next) => {
-					if (!!req.body.firstName && !!req.body.lastName && !!req.body.age) {
+					if (
+						!!req.body.firstName &&
+						!!req.body.lastName &&
+						!!req.body.login &&
+						!!req.body.password
+					) {
 						try {
 							let result = await this.UserService.createRecord.bind(this.UserService)(
 								req.body,

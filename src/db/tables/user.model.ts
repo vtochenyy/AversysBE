@@ -15,6 +15,8 @@ export class UserModel {
 					primaryKey: true,
 					type: DataTypes.UUID,
 				},
+				login: DataTypes.STRING,
+				password: DataTypes.STRING,
 				orgId: DataTypes.UUID,
 				firstName: DataTypes.STRING,
 				lastName: DataTypes.STRING,

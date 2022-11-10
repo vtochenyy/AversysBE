@@ -26,4 +26,8 @@ export class LoggerService implements ILogger {
 	warn(...args: unknown[]) {
 		this.logger.warn(...args);
 	}
+
+	debug(...args: unknown[]) {
+		this.logger.debug(...args);
+	}
 }

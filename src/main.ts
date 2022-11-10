@@ -16,7 +16,7 @@ import { IConfigService } from './config/config.service.interface';
 import 'reflect-metadata';
 
 //Agregation root
-const appContainer = new Container();
+const appContainer = new Container(); 
 
 appContainer.bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
 appContainer.bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter).inSingletonScope();

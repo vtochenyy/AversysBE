@@ -3,20 +3,27 @@ import { BaseService } from '../common/base.service';
 import { HttpError } from '../errors/http-error.class';
 import { IUserDto } from './user.dto.interface';
 import { injectable, inject } from 'inversify';
-import 'reflect-metadata';
 import { baseAnswer } from '../common/baseAnswer';
 import { DataAccessProvider } from '../dal/dataAccessProvider';
 import { TYPES } from '../types';
+import { hash, compare } from 'bcryptjs';
+import { LoggerService } from '../logger/logger.service';
+import { ConfigService } from '../config/config.service';
+import 'reflect-metadata';
 
 @injectable()
 export class UserService extends BaseService {
 	constructor(
-		@inject(TYPES.DataAccessProvider) private accessProvider: DataAccessProvider
+		@inject(TYPES.DataAccessProvider) private accessProvider: DataAccessProvider,
+		@inject(TYPES.ILogger) private logger: LoggerService,
+		@inject(TYPES.ConfigService) private configService: ConfigService
 	) {
 		super(accessProvider);
 	}
 	async createRecord(params: IUserDto, userEntity: any, next: NextFunction) {
 		try {
+			params.password = await hash('123', +this.configService.get('SALT'));
+			this.logger.debug(params.password);
 			const user = await this.accessProvider.createRecord(params, userEntity, next);
 			return baseAnswer(200, { id: user.id }, []);
 		} catch (error) {

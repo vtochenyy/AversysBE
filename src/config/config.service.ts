@@ -17,7 +17,7 @@ export class ConfigService implements IConfigService {
 			this.config = result.parsed as DotenvParseOutput;
 		}
 	}
-	get<T extends number | string>(key: string): T {
-		return this.config[key] as T;
+	get(key: string): string {
+		return this.config[key];
 	}
 }

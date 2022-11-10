@@ -1,12 +1,12 @@
-import { NextFunction } from 'express';
 import { BaseService } from '../common/base.service';
+import { NextFunction } from 'express';
 import { HttpError } from '../errors/http-error.class';
 import { IOrganizationDto } from './organization.dto.interface';
 import { injectable, inject } from 'inversify';
-import 'reflect-metadata';
 import { baseAnswer } from '../common/baseAnswer';
 import { TYPES } from '../types';
 import { DataAccessProvider } from '../dal/dataAccessProvider';
+import 'reflect-metadata';
 
 @injectable()
 export class OrganizationService extends BaseService {
