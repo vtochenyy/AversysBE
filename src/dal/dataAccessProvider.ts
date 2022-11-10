@@ -1,7 +1,10 @@
 import { NextFunction } from 'express';
 import { HttpError } from '../errors/http-error.class';
 import { v1 as uuidv1 } from 'uuid';
+import { injectable, inject } from 'inversify';
+import 'reflect-metadata';
 
+@injectable()
 export class DataAccessProvider {
 	async createRecord(params: any, dataAcessEntity: any, next: NextFunction) {
 		try {

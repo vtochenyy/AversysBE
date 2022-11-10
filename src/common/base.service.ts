@@ -1,11 +1,11 @@
 import { DataAccessProvider } from '../dal/dataAccessProvider';
+import { TYPES } from '../types';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 
 @injectable()
 export class BaseService {
-	dataAccessProvider: DataAccessProvider;
-	constructor() {
-		this.dataAccessProvider = new DataAccessProvider();
-	}
+	constructor(
+		@inject(TYPES.DataAccessProvider) private dataAccessProvider: DataAccessProvider
+	) {}
 }

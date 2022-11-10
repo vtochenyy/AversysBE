@@ -4,9 +4,17 @@ import { HttpError } from '../errors/http-error.class';
 import { IOrganizationDto } from './organization.dto.interface';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
+import { baseAnswer } from '../common/baseAnswer';
+import { TYPES } from '../types';
+import { DataAccessProvider } from '../dal/dataAccessProvider';
 
 @injectable()
 export class OrganizationService extends BaseService {
+	constructor(
+		@inject(TYPES.DataAccessProvider) private accessProvider: DataAccessProvider
+	) {
+		super(accessProvider);
+	}
 	async createRecord(
 		params: IOrganizationDto,
 		organizationEntity: any,
@@ -14,17 +22,17 @@ export class OrganizationService extends BaseService {
 		next: NextFunction
 	) {
 		try {
-			const organizationToExpanses = await this.dataAccessProvider.createRecord(
+			const organizationToExpanses = await this.accessProvider.createRecord(
 				{},
 				organizationToExpansesEnity,
 				next
 			);
-			const organization = await this.dataAccessProvider.createRecord(
+			const organization = await this.accessProvider.createRecord(
 				{ ...params, expanseId: organizationToExpanses.id },
 				organizationEntity,
 				next
 			);
-			return { id: organization.id };
+			return baseAnswer(200, { id: organization.id }, []);
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'OrganizationService'));
 		}
@@ -32,15 +40,12 @@ export class OrganizationService extends BaseService {
 
 	async findAll(organizationEntity: any, next: NextFunction) {
 		try {
-			const organizations = await this.dataAccessProvider.getAllRecords(
+			const organizations = await this.accessProvider.getAllRecords(
 				organizationEntity,
 				next
 			);
-			if (organizations.length == 0) {
-				next(new HttpError(500, 'Organizations not found', 'OrganizationService'));
-			} else {
-				return organizations;
-			}
+
+			return baseAnswer(200, organizations, []);
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'OrganizationService'));
 		}
@@ -48,12 +53,12 @@ export class OrganizationService extends BaseService {
 
 	async findByParams(params: any, organizationEntity: any, next: NextFunction) {
 		try {
-			const organizations = await this.dataAccessProvider.getRecordByParams(
+			const organizations = await this.accessProvider.getRecordByParams(
 				params,
 				organizationEntity,
 				next
 			);
-			return organizations;
+			return baseAnswer(200, organizations, []);
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'OrganizationService'));
 		}
