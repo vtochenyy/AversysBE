@@ -20,9 +20,10 @@ export class UserService extends BaseService {
 	) {
 		super(accessProvider);
 	}
+
 	async createRecord(params: IUserDto, userEntity: any, next: NextFunction) {
 		try {
-			let salt = genSaltSync(+this.configService.get('SALT'));
+			const salt = genSaltSync(+this.configService.get('SALT'));
 			const mark1 = performance.now();
 			params.password = await hash(params.password, salt);
 			const mark2 = performance.now();
