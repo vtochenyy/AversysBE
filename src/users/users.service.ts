@@ -6,7 +6,7 @@ import { injectable, inject } from 'inversify';
 import { baseAnswer } from '../common/baseAnswer';
 import { DataAccessProvider } from '../dal/dataAccessProvider';
 import { TYPES } from '../types';
-import { hash, compare } from 'bcryptjs';
+import { hash, compare, genSaltSync } from 'bcryptjs';
 import { LoggerService } from '../logger/logger.service';
 import { ConfigService } from '../config/config.service';
 import 'reflect-metadata';
@@ -22,8 +22,16 @@ export class UserService extends BaseService {
 	}
 	async createRecord(params: IUserDto, userEntity: any, next: NextFunction) {
 		try {
-			params.password = await hash('123', +this.configService.get('SALT'));
-			this.logger.debug(params.password);
+			let salt = genSaltSync(+this.configService.get('SALT'));
+			const mark1 = performance.now();
+			params.password = await hash(params.password, salt);
+			const mark2 = performance.now();
+			this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
+			let check = await compare(
+				'my_password',
+				'$2a$15$CtMTYKS/Z33w2YHfs1X84eJ0vim9whKX.N2DdqRMZkhRlMBdnvQYO'
+			);
+			this.logger.debug(`Сопоставление паролей ${check}`);
 			const user = await this.accessProvider.createRecord(params, userEntity, next);
 			return baseAnswer(200, { id: user.id }, []);
 		} catch (error) {
