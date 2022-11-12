@@ -7,7 +7,7 @@ import 'reflect-metadata';
 
 @injectable()
 export class ConfigService implements IConfigService {
-	private config: DotenvParseOutput;
+	config: DotenvParseOutput;
 	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		const result: DotenvConfigOutput = config();
 		if (result.error) {
@@ -15,6 +15,7 @@ export class ConfigService implements IConfigService {
 		} else {
 			this.logger.log(`[ConfigService] Удалось прочитать .env файл`);
 			this.config = result.parsed as DotenvParseOutput;
+			this.logger.debug(this.config);
 		}
 	}
 	get(key: string): string {

@@ -4,18 +4,22 @@ import { DBschema } from './dbSchema';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import 'reflect-metadata';
+import { IConfigService } from '../config/config.service.interface';
 
 @injectable()
 export class InitDatabase {
 	sequelize: Sequelize;
 	DBSchema: any;
 
-	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.ConfigService) private configService: IConfigService
+	) {
 		this.sequelize = new Sequelize({
 			port: 5432,
-			database: 'weatherDB',
-			password: 'postgres123321',
-			username: 'postgres',
+			database: this.configService.get('DATABASE'),
+			password: this.configService.get('PASS'),
+			username: this.configService.get('USERNAME'),
 			dialect: 'postgres',
 			host: 'localhost',
 		});

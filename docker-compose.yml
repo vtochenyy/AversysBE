@@ -3,9 +3,9 @@ services:
   postgres:
     image: postgres:13.3
     environment:
-      POSTGRES_DB: "weatherDB"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres123321"
+      POSTGRES_DB: "AVERSYS_DB"
+      POSTGRES_USER: "AVERSYS_POSTGRES"
+      POSTGRES_PASSWORD: "AVERSYS_GOD_123"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./db/entry:/docker-entrypoint-initdb.d
