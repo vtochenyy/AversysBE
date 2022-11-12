@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize';
 import { OrganizationModel } from './tables/organization.model';
 import { OrganizationToExpensesModel } from './tables/organizationToExpenses.model';
 import { ILogger } from '../logger/logger.interface';
+import { LogisticExpensesModel } from './tables/logisticExpenses.model';
 
 export class DBschema {
 	sequelize: Sequelize;
@@ -33,9 +34,13 @@ export class DBschema {
 		).OrganizationToExpenses;
 		this.Organization = new OrganizationModel(this.sequelize, this.logger).Organization;
 		this.User = new UserModel(this.sequelize, this.logger).User;
+		this.LogisticExpenses = new LogisticExpensesModel(this.sequelize, this.logger).LogisticExpenses;
 
 		this.OrganizationToExpenses.hasOne(this.Organization, { foreignKey: 'expanseId' });
 		this.Organization.hasOne(this.User, { foreignKey: 'orgId' });
+		this.OrganizationToExpenses.hasMany(this.LogisticExpenses);
+		this.LogisticExpenses.belongsTo(this.OrganizationToExpenses);
+
 		return {
 			User: this.User,
 			Organization: this.Organization,

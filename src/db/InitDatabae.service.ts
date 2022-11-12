@@ -27,7 +27,7 @@ export class InitDatabase {
 			this.sequelize.authenticate();
 			this.logger.log(`Connected to database`);
 			this.DBSchema = new DBschema(this.sequelize, this.logger).genenericAllTables();
-			this.sequelize.sync({ force: false });
+			this.sequelize.sync({ force: true });
 		} catch (error) {
 			this.logger.err(`Failed to coonnet to database: ${error}`);
 		}
