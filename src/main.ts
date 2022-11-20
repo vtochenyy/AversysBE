@@ -14,6 +14,7 @@ import { DataAccessProvider } from './dal/dataAccessProvider';
 import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
 import 'reflect-metadata';
+import { SequelizeInit } from './db/sequelize.init';
 
 //Agregation root
 const appContainer = new Container(); 
@@ -28,6 +29,7 @@ appContainer.bind<OrganizationService>(TYPES.OrganizationService).to(Organizatio
 appContainer.bind<DataAccessProvider>(TYPES.DataAccessProvider).to(DataAccessProvider).inSingletonScope();
 appContainer.bind<UsersController>(TYPES.UsersController).to(UsersController).inSingletonScope();
 appContainer.bind<OrganizationsController>(TYPES.OrganizationsController).to(OrganizationsController).inSingletonScope();
+appContainer.bind<SequelizeInit>(TYPES.SequelizeInit).to(SequelizeInit).inSingletonScope();
 
 const app = appContainer.get<App>(TYPES.Application);
 app.init();

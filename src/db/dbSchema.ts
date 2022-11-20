@@ -28,6 +28,7 @@ export class DBschema {
 		Organization: any;
 		OrganizationToExpenses: any;
 	} {
+		//Tables
 		this.OrganizationToExpenses = new OrganizationToExpensesModel(
 			this.sequelize,
 			this.logger
@@ -36,6 +37,7 @@ export class DBschema {
 		this.User = new UserModel(this.sequelize, this.logger).User;
 		this.LogisticExpenses = new LogisticExpensesModel(this.sequelize, this.logger).LogisticExpenses;
 
+		//Relations
 		this.OrganizationToExpenses.hasOne(this.Organization, { foreignKey: 'expanseId' });
 		this.Organization.hasOne(this.User, { foreignKey: 'orgId' });
 		this.OrganizationToExpenses.hasMany(this.LogisticExpenses);

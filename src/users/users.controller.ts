@@ -27,11 +27,29 @@ export class UsersController extends BaseController {
 				path: '/all',
 				method: 'get',
 				func: async (req, res, next) => {
-					const users = await this.UserService.findAll.bind(this.UserService)(
-						this.DBSchema.User,
-						next
-					);
+					const users = await this.UserService.findAll.bind(this.UserService)(this.DBSchema.User, next);
 					!!users && res.status(200).send(users);
+				},
+			},
+			{
+				root: '/users',
+				path: '/register',
+				method: 'post',
+				func: async (req, res, next) => {
+					if (!!req.body.firstName && !!req.body.lastName && !!req.body.login && !!req.body.password) {
+						try {
+							let result = await this.UserService.createRecord.bind(this.UserService)(
+								req.body,
+								this.DBSchema.User,
+								next
+							);
+							res.status(200).send(result);
+						} catch (error) {
+							next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
+						}
+					} else {
+						next(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
+					}
 				},
 			},
 			{
@@ -39,12 +57,7 @@ export class UsersController extends BaseController {
 				path: '/create',
 				method: 'post',
 				func: async (req, res, next) => {
-					if (
-						!!req.body.firstName &&
-						!!req.body.lastName &&
-						!!req.body.login &&
-						!!req.body.password
-					) {
+					if (!!req.body.firstName && !!req.body.lastName && !!req.body.login && !!req.body.password) {
 						try {
 							let result = await this.UserService.createRecord.bind(this.UserService)(
 								req.body,

@@ -29,7 +29,7 @@ export class UserService extends BaseService {
 			const mark2 = performance.now();
 			this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
 			const user = await this.accessProvider.createRecord(params, userEntity, next);
-			return baseAnswer(200, { id: user.id }, []);
+			return baseAnswer(200, { user, isAuth: true }, []);
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'UserService'));
 		}

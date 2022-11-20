@@ -9,4 +9,5 @@ export const TYPES = {
 	OrganizationService: Symbol.for('OrganizationService'),
 	DataAccessProvider: Symbol.for('DataAcessProvider'),
 	ConfigService: Symbol.for('ConfigService'),
+	SequelizeInit: Symbol.for('SequelizeInit'),
 };
