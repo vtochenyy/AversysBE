@@ -32,6 +32,7 @@ export class App {
 	public useRoutes() {
 		this.app.use(express.json());
 		this.app.use((req: Request, res: Response, next: NextFunction) => {
+			res.header('Access-Control-Allow-Origin', '*');
 			this.logger.log('Получен исходящий запрос');
 			next();
 		});
