@@ -1,5 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { Server } from 'http';
+import cors from 'cors';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { OrganizationsController } from './organizations/organizations.controller';
 import { injectable, inject } from 'inversify';
@@ -31,8 +32,10 @@ export class App {
 
 	public useRoutes() {
 		this.app.use(express.json());
+		this.app.use(cors());
 		this.app.use((req: Request, res: Response, next: NextFunction) => {
 			res.header('Access-Control-Allow-Origin', '*');
+			res.header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 			this.logger.log('Получен исходящий запрос');
 			next();
 		});
