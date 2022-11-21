@@ -73,7 +73,6 @@ export class UserService extends BaseService {
 				userEntity,
 				next
 			);
-			console.log(findedUser, '================');
 			if (findedUser.length == 0) {
 				next(new HttpError(500, 'Login is incorrect', 'UserService'));
 			} else {
