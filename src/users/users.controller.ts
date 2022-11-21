@@ -54,12 +54,12 @@ export class UsersController extends BaseController {
 			},
 			{
 				root: '/users',
-				path: '/create',
+				path: '/login',
 				method: 'post',
 				func: async (req, res, next) => {
-					if (!!req.body.firstName && !!req.body.lastName && !!req.body.login && !!req.body.password) {
+					if (!!req.body.login && !!req.body.password) {
 						try {
-							let result = await this.UserService.createRecord.bind(this.UserService)(
+							let result = await this.UserService.login.bind(this.UserService)(
 								req.body,
 								this.DBSchema.User,
 								next
@@ -73,6 +73,27 @@ export class UsersController extends BaseController {
 					}
 				},
 			},
+			// {
+			// 	root: '/users',
+			// 	path: '/create',
+			// 	method: 'post',
+			// 	func: async (req, res, next) => {
+			// 		if (!!req.body.firstName && !!req.body.lastName && !!req.body.login && !!req.body.password) {
+			// 			try {
+			// 				let result = await this.UserService.createRecord.bind(this.UserService)(
+			// 					req.body,
+			// 					this.DBSchema.User,
+			// 					next
+			// 				);
+			// 				res.status(200).send(result);
+			// 			} catch (error) {
+			// 				next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
+			// 			}
+			// 		} else {
+			// 			next(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
+			// 		}
+			// 	},
+			// },
 			{
 				root: '/users',
 				path: '/findById',

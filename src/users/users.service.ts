@@ -23,13 +23,22 @@ export class UserService extends BaseService {
 
 	async createRecord(params: IUserDto, userEntity: any, next: NextFunction) {
 		try {
-			const salt = genSaltSync(+this.configService.get('SALT'));
-			const mark1 = performance.now();
-			params.password = await hash(params.password, salt);
-			const mark2 = performance.now();
-			this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
-			const user = await this.accessProvider.createRecord(params, userEntity, next);
-			return baseAnswer(200, { user, isAuth: true }, []);
+			const checkUniqueUser = await this.accessProvider.getRecordByParams(
+				{ login: params.login },
+				userEntity,
+				next
+			);
+			if (checkUniqueUser.length > 0) {
+				next(new HttpError(402, 'Пользователь с таким логином уже существует', 'UserService'));
+			} else {
+				const salt = genSaltSync(+this.configService.get('SALT'));
+				const mark1 = performance.now();
+				params.password = await hash(params.password, salt);
+				const mark2 = performance.now();
+				this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
+				const user = await this.accessProvider.createRecord(params, userEntity, next);
+				return baseAnswer(200, { user, isAuth: true }, []);
+			}
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'UserService'));
 		}
@@ -50,6 +59,34 @@ export class UserService extends BaseService {
 			return baseAnswer(200, user, []);
 		} catch (error) {
 			next(new HttpError(500, 'User not found by id', 'UserService'));
+		}
+	}
+
+	async login(
+		userCredentials: { login: string; password: string },
+		userEntity: any,
+		next: NextFunction
+	) {
+		try {
+			const findedUser = await this.accessProvider.getRecordByParams(
+				{ login: userCredentials.login },
+				userEntity,
+				next
+			);
+			console.log(findedUser, '================');
+			if (findedUser.length == 0) {
+				next(new HttpError(500, 'Login is incorrect', 'UserService'));
+			} else {
+				let compareResult = await compare(userCredentials.password, findedUser[0].password);
+				if (!!compareResult) {
+					this.logger.log(`The user ${findedUser[0].login} was authorized`);
+					return baseAnswer(200, { user: { ...findedUser[0].dataValues }, isAuth: true }, []);
+				} else {
+					next(new HttpError(500, 'Password is incorrect', 'UserService'));
+				}
+			}
+		} catch (error) {
+			next(new HttpError(500, 'Error while login', 'UserService'));
 		}
 	}
 }
