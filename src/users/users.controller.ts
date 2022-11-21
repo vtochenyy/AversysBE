@@ -73,6 +73,23 @@ export class UsersController extends BaseController {
 					}
 				},
 			},
+			{
+				root: '/users',
+				path: '/logout',
+				method: 'post',
+				func: async (req, res, next) => {
+					if (!!req.body.login) {
+						try {
+							let result = await this.UserService.logout.bind(this.UserService)(req.body.login);
+							res.status(200).send(result);
+						} catch (error) {
+							next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
+						}
+					} else {
+						next(new HttpError(500, 'Ошибка структуры тела запроса', '/testUser'));
+					}
+				},
+			},
 			// {
 			// 	root: '/users',
 			// 	path: '/create',

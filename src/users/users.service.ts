@@ -88,4 +88,9 @@ export class UserService extends BaseService {
 			next(new HttpError(500, 'Error while login', 'UserService'));
 		}
 	}
+
+	async logout(login: string) {
+		this.logger.log(`User ${login} was logout`);
+		return baseAnswer(200, { isAuth: false }, []);
+	}
 }
