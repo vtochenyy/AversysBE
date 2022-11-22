@@ -17,8 +17,7 @@ export class UsersLogsModel {
 				},
 				message: DataTypes.STRING,
 				login: DataTypes.STRING,
-				firstName: DataTypes.STRING,
-				lastName: DataTypes.STRING,
+				userId: DataTypes.UUID,
 			});
 			this.logger.log(`Table [UsersLogs] was created succesfully`);
 		} catch (error) {

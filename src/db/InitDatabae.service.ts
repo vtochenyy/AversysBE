@@ -1,10 +1,8 @@
-import { Sequelize } from 'sequelize';
 import { injectable, inject } from 'inversify';
 import { DBschema } from './dbSchema';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import 'reflect-metadata';
-import { IConfigService } from '../config/config.service.interface';
 import { SequelizeInit } from './sequelize.init';
 
 @injectable()
