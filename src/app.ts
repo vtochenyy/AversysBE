@@ -37,6 +37,8 @@ export class App {
 			this.logger.log('Получен исходящий запрос');
 			next();
 		});
+		// next внутри контроллеров не вызывает другой контроллер, т.к. они являются элементами маршрутизации,
+		// поэтому будет вызван следующий промежуточный обработчик, после контроллеров - exeptionFilter.
 		this.app.use('/users', this.usersController.router);
 		this.app.use('/org', this.organizationController.router);
 	}
