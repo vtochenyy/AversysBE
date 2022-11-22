@@ -65,6 +65,7 @@ export class UserService extends BaseService {
 	async login(
 		userCredentials: { login: string; password: string },
 		userEntity: any,
+		usersLogsEntity: any,
 		next: NextFunction
 	) {
 		try {
@@ -79,6 +80,15 @@ export class UserService extends BaseService {
 				let compareResult = await compare(userCredentials.password, findedUser[0].password);
 				if (!!compareResult) {
 					this.logger.log(`The user ${findedUser[0].login} was authorized`);
+					await this.accessProvider.createRecord(
+						{
+							message: 'login',
+							userId: findedUser[0].dataValues.id,
+							login: findedUser[0].dataValues.login,
+						},
+						usersLogsEntity,
+						next
+					);
 					return baseAnswer(200, { user: { ...findedUser[0].dataValues }, isAuth: true }, []);
 				} else {
 					next(new HttpError(500, 'Password is incorrect', 'UserService'));
@@ -89,8 +99,26 @@ export class UserService extends BaseService {
 		}
 	}
 
-	async logout(login: string) {
-		this.logger.log(`User ${login} was logout`);
-		return baseAnswer(200, { isAuth: false }, []);
+	async logout(login: string, userEntity: any, usersLogsEntity: any, next: NextFunction) {
+		try {
+			const findedUser = await this.accessProvider.getRecordByParams(
+				{ login: login },
+				userEntity,
+				next
+			);
+			await this.accessProvider.createRecord(
+				{
+					message: 'logout',
+					userId: findedUser[0].dataValues.id,
+					login: findedUser[0].dataValues.login,
+				},
+				usersLogsEntity,
+				next
+			);
+			this.logger.log(`User ${login} was logout`);
+			return baseAnswer(200, { isAuth: false }, []);
+		} catch (error) {
+			next(new HttpError(500, 'Logout error', 'UserService'));
+		}
 	}
 }

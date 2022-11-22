@@ -62,6 +62,7 @@ export class UsersController extends BaseController {
 							let result = await this.UserService.login.bind(this.UserService)(
 								req.body,
 								this.DBSchema.User,
+								this.DBSchema.UsersLogs,
 								next
 							);
 							res.status(200).send(result);
@@ -80,7 +81,12 @@ export class UsersController extends BaseController {
 				func: async (req, res, next) => {
 					if (!!req.body.login) {
 						try {
-							let result = await this.UserService.logout.bind(this.UserService)(req.body.login);
+							let result = await this.UserService.logout.bind(this.UserService)(
+								req.body.login,
+								this.DBSchema.User,
+								this.DBSchema.UsersLogs,
+								next
+							);
 							res.status(200).send(result);
 						} catch (error) {
 							next(new HttpError(500, 'Ошибка обработки запроса', '/testUser'));
