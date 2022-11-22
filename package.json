@@ -6,8 +6,8 @@
 	"type": "commonjs",
 	"scripts": {
 		"dev": "nodemon",
-		"start": "nodemon tsc ./src/main.ts",
-		"build": "npm run build && nodemon ./dist/src/main.js",
+		"start": "node ./dist/src/main.js",
+		"build": "tsc && node ./dist/src/main.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Vitaly Tochenyy",
