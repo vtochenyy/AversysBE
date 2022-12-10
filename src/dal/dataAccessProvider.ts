@@ -6,13 +6,13 @@ import 'reflect-metadata';
 
 @injectable()
 export class DataAccessProvider {
-	async createRecord(params: any, dataAcessEntity: any, next: NextFunction) {
+	async createRecord(params: any, dataAcessEntity: any, next?: NextFunction) {
 		try {
 			params.id = uuidv1();
 			let dataResponse = await dataAcessEntity.create(params);
 			return dataResponse.dataValues;
 		} catch (error) {
-			next(new HttpError(500, 'Error while creating record', 'DataAccessProvider'));
+			!!next && next(new HttpError(500, 'Error while creating record', 'DataAccessProvider'));
 		}
 	}
 

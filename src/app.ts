@@ -10,6 +10,8 @@ import swaggerDocument from '../backendAPI.json';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
 import 'reflect-metadata';
+import { SequelizeInit } from './db/sequelize.init';
+import { DictionaryController } from './dicts/dictionary.controller';
 
 @injectable()
 export class App {
@@ -20,8 +22,10 @@ export class App {
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
 		@inject(TYPES.UsersController) private usersController: UsersController,
+		@inject(TYPES.DictionaryController) private dictionaryController: DictionaryController,
 		@inject(TYPES.OrganizationsController)
 		private organizationController: OrganizationsController,
+		@inject(TYPES.SequelizeInit) private sequelizeInit: SequelizeInit,
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter
 	) {
 		this.app = express();
@@ -41,6 +45,7 @@ export class App {
 		// поэтому будет вызван следующий промежуточный обработчик, после контроллеров - exeptionFilter.
 		this.app.use('/users', this.usersController.router);
 		this.app.use('/org', this.organizationController.router);
+		this.app.use('/dicts', this.dictionaryController.router);
 	}
 
 	public useSwagger() {

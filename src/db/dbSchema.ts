@@ -1,10 +1,15 @@
 import { UserModel } from './tables/user.model';
-import { Sequelize } from 'sequelize';
+import { Sequelize, QueryTypes } from 'sequelize';
 import { OrganizationModel } from './tables/organization.model';
 import { OrganizationToExpensesModel } from './tables/organizationToExpenses.model';
 import { ILogger } from '../logger/logger.interface';
 import { LogisticExpensesModel } from './tables/logisticExpenses.model';
 import { UsersLogsModel } from './tables/users.logs.model';
+import ErrorDict from '../dicts/errorDict.json';
+import { inject } from 'inversify';
+import { TYPES } from '../types';
+import { DataAccessProvider } from '../dal/dataAccessProvider';
+import { ErrorDictModel } from './tables/errorDict.model';
 
 export class DBschema {
 	sequelize: Sequelize;
@@ -20,8 +25,13 @@ export class DBschema {
 	ServiceIncomes: any;
 	ProductsIncomes: any;
 	InvestingIncomes: any;
+	ErrorDict: any;
 
-	constructor(sequelize: Sequelize, private logger: ILogger) {
+	constructor(
+		@inject(TYPES.DataAccessProvider) private DAL: DataAccessProvider,
+		sequelize: Sequelize,
+		private logger: ILogger
+	) {
 		this.sequelize = sequelize;
 	}
 
@@ -31,12 +41,14 @@ export class DBschema {
 		OrganizationToExpenses: any;
 		LogisticExpenses: any;
 		UsersLogs: any;
+		ErrorDict: any;
 	} {
 		//Tables
 		this.OrganizationToExpenses = new OrganizationToExpensesModel(
 			this.sequelize,
 			this.logger
 		).OrganizationToExpenses;
+		this.ErrorDict = new ErrorDictModel(this.sequelize, this.logger).ErrorDict;
 		this.Organization = new OrganizationModel(this.sequelize, this.logger).Organization;
 		this.User = new UserModel(this.sequelize, this.logger).User;
 		this.UsersLogs = new UsersLogsModel(this.sequelize, this.logger).UsersLogs;
@@ -51,12 +63,19 @@ export class DBschema {
 
 		this.User.hasOne(this.UsersLogs, { foreignKey: 'userId' });
 
+		//Migrations
+		this.ErrorDict.destroy({ where: {}, truncate: true });
+		ErrorDict.data.forEach((el) => {
+			this.DAL.createRecord(el, this.ErrorDict);
+		});
+
 		return {
 			User: this.User,
 			Organization: this.Organization,
 			OrganizationToExpenses: this.OrganizationToExpenses,
 			LogisticExpenses: this.LogisticExpenses,
 			UsersLogs: this.UsersLogs,
+			ErrorDict: this.ErrorDict,
 			// Organization_to_Income: this.OrganizationToIncome,
 			// LogisticExpenses: this.LogisticExpenses,
 			// StuffExpenses: this.StuffExpenses,

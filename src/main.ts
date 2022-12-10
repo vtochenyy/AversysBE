@@ -15,6 +15,8 @@ import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
 import 'reflect-metadata';
 import { SequelizeInit } from './db/sequelize.init';
+import { DictionaryController } from './dicts/dictionary.controller';
+import { DictionaryService } from './dicts/dictionary.service';
 
 //Agregation root
 const appContainer = new Container(); 
@@ -27,10 +29,12 @@ function bindDeps(){
     appContainer.bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
     appContainer.bind<UserService>(TYPES.UserService).to(UserService).inSingletonScope();
     appContainer.bind<OrganizationService>(TYPES.OrganizationService).to(OrganizationService).inSingletonScope();
+    appContainer.bind<DictionaryService>(TYPES.DictionaryService).to(DictionaryService).inSingletonScope();
     appContainer.bind<DataAccessProvider>(TYPES.DataAccessProvider).to(DataAccessProvider).inSingletonScope();
     appContainer.bind<UsersController>(TYPES.UsersController).to(UsersController).inSingletonScope();
     appContainer.bind<OrganizationsController>(TYPES.OrganizationsController).to(OrganizationsController).inSingletonScope();
     appContainer.bind<SequelizeInit>(TYPES.SequelizeInit).to(SequelizeInit).inSingletonScope();
+    appContainer.bind<DictionaryController>(TYPES.DictionaryController).to(DictionaryController).inSingletonScope();
 }
 bindDeps();
 
