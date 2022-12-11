@@ -22,7 +22,7 @@ export class SequelizeInit {
 				dialect: 'postgres',
 			});
 			this.sequelize.authenticate();
-			this.sequelize.sync({ force: false });
+			this.sequelize.sync({ force: true });
 			this.logger.log(`Connected to database`);
 		} catch (err) {
 			throw new Error('Failed to connect to database');

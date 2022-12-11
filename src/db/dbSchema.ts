@@ -64,10 +64,12 @@ export class DBschema {
 		this.User.hasOne(this.UsersLogs, { foreignKey: 'userId' });
 
 		//Migrations
-		this.ErrorDict.destroy({ where: {}, truncate: true });
-		ErrorDict.data.forEach((el) => {
-			this.DAL.createRecord(el, this.ErrorDict);
-		});
+		setTimeout(() => {
+			this.ErrorDict.destroy({ where: {}, truncate: true });
+			ErrorDict.data.forEach((el) => {
+				this.DAL.createRecord(el, this.ErrorDict);
+			});
+		}, 5000);
 
 		return {
 			User: this.User,
