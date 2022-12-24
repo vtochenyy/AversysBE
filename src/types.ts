@@ -4,12 +4,6 @@ export const TYPES = {
 	UsersController: Symbol.for('UsersController'),
 	OrganizationsController: Symbol.for('OrganizationsController'),
 	ExeptionFilter: Symbol.for('ExeptionFilter'),
-	DataBase: Symbol.for('DataBase'),
-	UserService: Symbol.for('UserService'),
-	OrganizationService: Symbol.for('OrganizationService'),
-	DataAccessProvider: Symbol.for('DataAcessProvider'),
 	ConfigService: Symbol.for('ConfigService'),
-	DictionaryService: Symbol.for('DictionaryService'),
-	SequelizeInit: Symbol.for('SequelizeInit'),
 	DictionaryController: Symbol.for('DictionaryController'),
 };

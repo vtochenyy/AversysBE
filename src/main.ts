@@ -25,15 +25,9 @@ function bindDeps(){
     appContainer.bind<App>(TYPES.Application).to(App).inSingletonScope();
     appContainer.bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
     appContainer.bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter).inSingletonScope();
-    appContainer.bind<InitDatabase>(TYPES.DataBase).to(InitDatabase).inSingletonScope();
     appContainer.bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
-    appContainer.bind<UserService>(TYPES.UserService).to(UserService).inSingletonScope();
-    appContainer.bind<OrganizationService>(TYPES.OrganizationService).to(OrganizationService).inSingletonScope();
-    appContainer.bind<DictionaryService>(TYPES.DictionaryService).to(DictionaryService).inSingletonScope();
-    appContainer.bind<DataAccessProvider>(TYPES.DataAccessProvider).to(DataAccessProvider).inSingletonScope();
     appContainer.bind<UsersController>(TYPES.UsersController).to(UsersController).inSingletonScope();
     appContainer.bind<OrganizationsController>(TYPES.OrganizationsController).to(OrganizationsController).inSingletonScope();
-    appContainer.bind<SequelizeInit>(TYPES.SequelizeInit).to(SequelizeInit).inSingletonScope();
     appContainer.bind<DictionaryController>(TYPES.DictionaryController).to(DictionaryController).inSingletonScope();
 }
 bindDeps();

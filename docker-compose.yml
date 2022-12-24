@@ -2,16 +2,17 @@ version: "3.9"
 services:
   postgres:
     image: postgres:13.3
+    env_file: .env
     environment:
-      POSTGRES_DB: "AVERSYS_DB"
-      POSTGRES_USER: "AVERSYS_POSTGRES"
-      POSTGRES_PASSWORD: "AVERSYS_GOD_123"
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      POSTGRES_DB: ${DATABASE}
+      POSTGRES_USER: ${USERNAME}
+      POSTGRES_PASSWORD: ${PASS}
+      PGDATA: ${PGDATA}
     volumes:
       - ./db/entry:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - ${PORT}:${PORT}
     restart: unless-stopped
     deploy:
       resources:
