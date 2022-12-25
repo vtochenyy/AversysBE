@@ -9,8 +9,8 @@ services:
       POSTGRES_PASSWORD: ${PASS}
       PGDATA: ${PGDATA}
     volumes:
-      - ./db/entry:/docker-entrypoint-initdb.d
-      - ./db/data:/var/lib/postgresql/data
+      - ${VOLUME_ENTRY}
+      - ${VOLUME_DATA}
     ports:
       - ${PORT}:${PORT}
     restart: unless-stopped

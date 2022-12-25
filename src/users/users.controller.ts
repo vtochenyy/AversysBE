@@ -1,15 +1,19 @@
 import { BaseController } from '../common/base.controller';
+import { NextFunction, Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
 import { HttpError } from '../errors/http-error.class';
-import { UserService } from './users.service';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
 import 'reflect-metadata';
+import { UserService } from './users.service';
 
 @injectable()
 export class UsersController extends BaseController {
 	DBSchema: any;
-	constructor(@inject(TYPES.ILogger) loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.UsersService) private userService: UserService
+	) {
 		super(loggerService);
 		this.bindUserAPI();
 	}
@@ -26,7 +30,7 @@ export class UsersController extends BaseController {
 				root: '/users',
 				path: '/register',
 				method: 'post',
-				func: async (req, res, next) => {},
+				func: this.register,
 			},
 			{
 				root: '/users',
@@ -47,5 +51,15 @@ export class UsersController extends BaseController {
 				func: async (req, res, next) => {},
 			},
 		]);
+	}
+
+	async register(req: Request, res: Response, next: NextFunction) {
+		try {
+			let user = await this.userService.createRecord(req.body, next);
+			res.status(201).send(user);
+		} catch (err) {
+			this.loggerService.err(err);
+			next(new HttpError(400, 'Неверно сформирован запрос', 'UsersController'));
+		}
 	}
 }

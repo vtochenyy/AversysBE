@@ -12,9 +12,11 @@ export class ExeptionFilter implements IExeptionFilter {
 		this.logger.log('Зарегистрирован обрбаотчик ошибок');
 	}
 
+	// catch() - зарезервированное слово, метод js, обрабатывающий ошибки. Поэтому при вызове next()
+	// в коде, где генерится ошибка мы попадаем сюда и её обрабатываем.
 	catch(err: Error | HttpError, req: Request, res: Response, next: NextFunction) {
 		if (err instanceof HttpError) {
-			this.logger.err(`[${err.context}] ошибка ${err.statusCode} ${err.message}`);
+			this.logger.err(`[${err.context}] Ошибка ${err.statusCode} ${err.message}`);
 			res
 				.status(err.statusCode)
 				.send({ statusCode: err.statusCode, errorText: err.message, context: err.context });

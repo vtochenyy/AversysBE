@@ -1,6 +1,5 @@
 import { Container } from 'inversify';
 import { App } from './app';
-import { InitDatabase } from './db/InitDatabae.service';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { IExeptionFilter } from './errors/exeption.filter.interface';
 import { ILogger } from './logger/logger.interface';
@@ -10,13 +9,15 @@ import { OrganizationsController } from './organizations/organizations.controlle
 import { TYPES } from './types';
 import { UsersController } from './users/users.controller';
 import { UserService } from './users/users.service';
-import { DataAccessProvider } from './dal/dataAccessProvider';
 import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
-import 'reflect-metadata';
-import { SequelizeInit } from './db/sequelize.init';
 import { DictionaryController } from './dicts/dictionary.controller';
 import { DictionaryService } from './dicts/dictionary.service';
+import 'reflect-metadata';
+import { IDatabaseService } from './db/databaseService.interface';
+import { DatabaseService } from './db/database.service';
+import { UsersRepository } from './users/users.repository';
+import { IUsersRepository } from './users/usersRepositoty.interface';
 
 //Agregation root
 const appContainer = new Container(); 
@@ -27,8 +28,11 @@ function bindDeps(){
     appContainer.bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter).inSingletonScope();
     appContainer.bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
     appContainer.bind<UsersController>(TYPES.UsersController).to(UsersController).inSingletonScope();
+    appContainer.bind<UserService>(TYPES.UsersService).to(UserService).inSingletonScope();
+    appContainer.bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
     appContainer.bind<OrganizationsController>(TYPES.OrganizationsController).to(OrganizationsController).inSingletonScope();
     appContainer.bind<DictionaryController>(TYPES.DictionaryController).to(DictionaryController).inSingletonScope();
+    appContainer.bind<IDatabaseService>(TYPES.DatabaseService).to(DatabaseService).inSingletonScope();
 }
 bindDeps();
 

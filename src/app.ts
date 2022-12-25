@@ -9,8 +9,9 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../backendAPI.json';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
-import 'reflect-metadata';
 import { DictionaryController } from './dicts/dictionary.controller';
+import 'reflect-metadata';
+import { IDatabaseService } from './db/databaseService.interface';
 
 @injectable()
 export class App {
@@ -24,7 +25,8 @@ export class App {
 		@inject(TYPES.DictionaryController) private dictionaryController: DictionaryController,
 		@inject(TYPES.OrganizationsController)
 		private organizationController: OrganizationsController,
-		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter
+		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter,
+		@inject(TYPES.DatabaseService) private databaseService: IDatabaseService
 	) {
 		this.app = express();
 		this.port = 9876;
@@ -60,6 +62,7 @@ export class App {
 			this.useSwagger();
 			this.useRoutes();
 			this.useExeptionFilters();
+			this.databaseService.connect();
 		});
 	}
 }
