@@ -3,9 +3,8 @@
 	"version": "1.0.0",
 	"description": "CLI app with node js",
 	"main": "index.js",
-	"type": "commonjs",
 	"scripts": {
-		"update_db": "npx prisma generate && npx prisma migrate dev",
+		"db:update": "npx prisma generate && npx prisma migrate dev",
 		"dev": "nodemon",
 		"start": "node ./dist/src/main.js",
 		"build": "tsc && node ./dist/src/main.js",
