@@ -56,6 +56,7 @@ export class App {
 		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
 	}
 
+	//Порядок вызова middlewears: useSwagger -> useRoutes (только один раз, не вызывается повторно в рамках одногт запроса) -> useExeptionFilters
 	public async init() {
 		this.server = this.app.listen(this.port, () => {
 			this.logger.log(`Server running at port: ${this.port}`);

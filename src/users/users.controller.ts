@@ -4,8 +4,8 @@ import { injectable, inject } from 'inversify';
 import { HttpError } from '../errors/http-error.class';
 import { TYPES } from '../types';
 import { ILogger } from '../logger/logger.interface';
-import 'reflect-metadata';
 import { UserService } from './users.service';
+import 'reflect-metadata';
 
 @injectable()
 export class UsersController extends BaseController {
@@ -55,8 +55,12 @@ export class UsersController extends BaseController {
 
 	async register(req: Request, res: Response, next: NextFunction) {
 		try {
-			let user = await this.userService.createRecord(req.body, next);
-			res.status(201).send(user);
+			if (!!req.body.login && !!req.body.password) {
+				let user = await this.userService.createRecord(req.body, next);
+				res.status(201).send(user);
+			} else {
+				throw new Error();
+			}
 		} catch (err) {
 			this.loggerService.err(err);
 			next(new HttpError(400, 'Неверно сформирован запрос', 'UsersController'));

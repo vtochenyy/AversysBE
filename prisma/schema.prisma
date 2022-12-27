@@ -20,11 +20,12 @@ model UserModel {
   email                   String?
   phone                   String?
   password                String
-  login                   String
+  login                   String                    @unique
   age                     Int?
   createdAt               DateTime                  @default(now())
   competence              String?
   UserToOrganizationModel UserToOrganizationModel[]
+  UsersLogs               UsersLogs[]
 }
 
 model UserToOrganizationModel {
@@ -41,4 +42,11 @@ model OrganizationModel {
   orgabbr                 String
   orgtype                 OrgType
   UserToOrganizationModel UserToOrganizationModel[]
+}
+
+model UsersLogs {
+  id      String    @unique @db.Uuid
+  message String
+  userId  String    @db.Uuid
+  user    UserModel @relation(fields: [userId], references: [id])
 }

@@ -1,16 +1,19 @@
 import { Router } from 'express';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { IControllerRoute } from './route.interface';
 import { ILogger } from '../logger/logger.interface';
-import 'reflect-metadata';
 import { TYPES } from '../types';
+import lodash, { LoDashStatic } from 'lodash';
+import 'reflect-metadata';
 
 @injectable()
 export abstract class BaseController {
 	private readonly _router: Router;
+	protected _: LoDashStatic;
 
-	constructor(private logger: ILogger) {
+	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
 		this._router = Router();
+		this._ = lodash;
 	}
 
 	get router() {

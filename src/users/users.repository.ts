@@ -28,7 +28,7 @@ export class UsersRepository implements IUsersRepository {
 		return await this.client.userModel.findUnique({ where: { id: userId } });
 	}
 
-	async findByCriteria(userData: UserModel) {
+	async findByCriteria(userData: any): Promise<UserModel[]> {
 		return await this.client.userModel.findMany({
 			where: {
 				...userData,
