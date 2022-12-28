@@ -11,7 +11,7 @@ export class UsersRepository implements IUsersRepository {
 	client: PrismaClient;
 
 	constructor(@inject(TYPES.DatabaseService) private databaseService: IDatabaseService) {
-		this.client = databaseService.client;
+		this.client = this.databaseService.client;
 	}
 
 	async create(params: UserModel) {

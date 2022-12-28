@@ -25,7 +25,7 @@ model UserModel {
   createdAt               DateTime                  @default(now())
   competence              String?
   UserToOrganizationModel UserToOrganizationModel[]
-  UsersLogs               UsersLogs[]
+  UsersLogs               UsersLogsModel[]
 }
 
 model UserToOrganizationModel {
@@ -44,9 +44,15 @@ model OrganizationModel {
   UserToOrganizationModel UserToOrganizationModel[]
 }
 
-model UsersLogs {
+model UsersLogsModel {
   id      String    @unique @db.Uuid
   message String
   userId  String    @db.Uuid
   user    UserModel @relation(fields: [userId], references: [id])
+}
+
+model ErrorDictModel {
+  id          String @unique @db.Uuid
+  code        Int
+  description String
 }

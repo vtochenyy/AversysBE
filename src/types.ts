@@ -5,6 +5,7 @@ export const TYPES = {
 	UsersController: Symbol.for('UsersController'),
 	UsersRepository: Symbol.for('UsersRepository'),
 	UsersService: Symbol.for('UsersService'),
+	UsersLogsRepository: Symbol.for('UsersLogs'),
 
 	OrganizationsController: Symbol.for('OrganizationsController'),
 	ExeptionFilter: Symbol.for('ExeptionFilter'),

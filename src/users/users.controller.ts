@@ -9,7 +9,6 @@ import 'reflect-metadata';
 
 @injectable()
 export class UsersController extends BaseController {
-	DBSchema: any;
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.UsersService) private userService: UserService
@@ -36,7 +35,7 @@ export class UsersController extends BaseController {
 				root: '/users',
 				path: '/login',
 				method: 'post',
-				func: async (req, res, next) => {},
+				func: this.login,
 			},
 			{
 				root: '/users',
@@ -64,6 +63,20 @@ export class UsersController extends BaseController {
 		} catch (err) {
 			this.loggerService.err(err);
 			next(new HttpError(400, 'Неверно сформирован запрос', 'UsersController'));
+		}
+	}
+
+	async login(req: Request, res: Response, next: NextFunction) {
+		try {
+			if (!!req.body.login && !!req.body.password) {
+				let data = await this.userService.login(
+					{ login: req.body.login, password: req.body.password },
+					next
+				);
+				res.status(200).send(data);
+			}
+		} catch (err) {
+			next(new HttpError(400, 'Error', 'UserController'));
 		}
 	}
 }

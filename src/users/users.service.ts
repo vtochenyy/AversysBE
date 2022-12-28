@@ -1,5 +1,6 @@
 import { NextFunction } from 'express';
-import { UserModel, UsersLogs } from '@prisma/client';
+import { v1 as uuidv1 } from 'uuid';
+// import { UserModel, UsersLogsModel } from '@prisma/client';
 import { HttpError } from '../errors/http-error.class';
 import { injectable, inject } from 'inversify';
 import { baseAnswer } from '../common/baseAnswer';
@@ -9,6 +10,7 @@ import { LoggerService } from '../logger/logger.service';
 import { ConfigService } from '../config/config.service';
 import { IUsersRepository } from './usersRepositoty.interface';
 import 'reflect-metadata';
+import { IUsersLogsRepository } from './usersLogs/usersLogsRepository.interface';
 
 type BaseAnswer = {
 	status: number;
@@ -21,7 +23,8 @@ export class UserService {
 	constructor(
 		@inject(TYPES.ILogger) private logger: LoggerService,
 		@inject(TYPES.ConfigService) private configService: ConfigService,
-		@inject(TYPES.UsersRepository) private usersRepo: IUsersRepository
+		@inject(TYPES.UsersRepository) private usersRepo: IUsersRepository,
+		@inject(TYPES.UsersLogsRepository) private usersLogsRepo: IUsersLogsRepository
 	) {}
 
 	async createRecord(params: any, next: NextFunction): Promise<BaseAnswer | undefined> {
@@ -42,9 +45,9 @@ export class UserService {
 		}
 	}
 
-	async findAll(userEntity: any, next: NextFunction) {}
+	async findAll(next: NextFunction) {}
 
-	async getUserById(userID: string, userEntity: any, next: NextFunction) {}
+	async getUserById(userID: string, next: NextFunction) {}
 
 	async login(userCredentials: { login: string; password: string }, next: NextFunction) {
 		try {
@@ -52,15 +55,18 @@ export class UserService {
 			if (findedUser.length == 0) {
 				next(new HttpError(500, 'Login is incorrect', 'UserService'));
 			} else {
+				console.log(userCredentials);
+				console.log(userCredentials.password, findedUser[0].password, '------------------------');
 				let compareResult = await compare(userCredentials.password, findedUser[0].password);
 				if (!!compareResult) {
 					this.logger.log(`The user ${findedUser[0].login} was authorized`);
-					await this.usersRepo.createRecord({
+					let recordId = uuidv1();
+					await this.usersLogsRepo.create({
+						id: recordId,
 						message: 'login',
-						userId: findedUser[0].dataValues.id,
-						login: findedUser[0].dataValues.login,
+						userId: findedUser[0].id,
 					});
-					return baseAnswer(200, { user: { ...findedUser[0].dataValues }, isAuth: true }, []);
+					return baseAnswer(200, { user: { ...findedUser[0] }, isAuth: true }, []);
 				} else {
 					next(new HttpError(500, 'Password is incorrect', 'UserService'));
 				}
