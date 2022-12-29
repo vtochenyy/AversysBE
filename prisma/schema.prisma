@@ -45,10 +45,11 @@ model OrganizationModel {
 }
 
 model UsersLogsModel {
-  id      String    @unique @db.Uuid
-  message String
-  userId  String    @db.Uuid
-  user    UserModel @relation(fields: [userId], references: [id])
+  id        String    @unique @db.Uuid
+  message   String
+  userId    String    @db.Uuid
+  createdOn DateTime  @default(now())
+  user      UserModel @relation(fields: [userId], references: [id])
 }
 
 model ErrorDictModel {

@@ -55,13 +55,11 @@ export class UserService {
 			if (findedUser.length == 0) {
 				next(new HttpError(500, 'Login is incorrect', 'UserService'));
 			} else {
-				console.log(userCredentials);
-				console.log(userCredentials.password, findedUser[0].password, '------------------------');
 				let compareResult = await compare(userCredentials.password, findedUser[0].password);
 				if (!!compareResult) {
 					this.logger.log(`The user ${findedUser[0].login} was authorized`);
 					let recordId = uuidv1();
-					await this.usersLogsRepo.create({
+					this.usersLogsRepo.create({
 						id: recordId,
 						message: 'login',
 						userId: findedUser[0].id,

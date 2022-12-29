@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, UsersLogsModel } from '@prisma/client';
+import { PrismaClient, UsersLogsModel } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { IDatabaseService } from '../../db/databaseService.interface';
 import { TYPES } from '../../types';
@@ -13,8 +13,8 @@ export class UsersLogsRepository implements IUsersLogsRepository {
 		this.client = this.databaseService.client;
 	}
 
-	async create(params: UsersLogsModel) {
-		this.client.usersLogsModel.create({ data: params });
+	async create(params: { id: string; message: string, userId: string }) {
+		let data = await this.client.usersLogsModel.create({ data: params });
 	}
 
 	async getAll(): Promise<UsersLogsModel[]> {
