@@ -13,66 +13,113 @@ import 'reflect-metadata';
 import { IUsersLogsRepository } from './usersLogs/usersLogsRepository.interface';
 
 type BaseAnswer = {
-	status: number;
-	data: Object;
-	paging: Object;
+    status: number;
+    data: Object;
+    paging: Object;
 };
 
 @injectable()
 export class UserService {
-	constructor(
-		@inject(TYPES.ILogger) private logger: LoggerService,
-		@inject(TYPES.ConfigService) private configService: ConfigService,
-		@inject(TYPES.UsersRepository) private usersRepo: IUsersRepository,
-		@inject(TYPES.UsersLogsRepository) private usersLogsRepo: IUsersLogsRepository
-	) {}
+    constructor(
+        @inject(TYPES.ILogger) private logger: LoggerService,
+        @inject(TYPES.ConfigService) private configService: ConfigService,
+        @inject(TYPES.UsersRepository) private usersRepo: IUsersRepository,
+        @inject(TYPES.UsersLogsRepository) private usersLogsRepo: IUsersLogsRepository
+    ) {}
 
-	async createRecord(params: any, next: NextFunction): Promise<BaseAnswer | undefined> {
-		try {
-			let userFromLoginCheck = await this.usersRepo.findByCriteria({ login: params.login });
-			if (userFromLoginCheck.length > 0) {
-				next(new HttpError(400, 'Такой пользователь уже существует', 'UserService'));
-			} else {
-				const mark1 = performance.now();
-				params.password = await hash(params.password, genSaltSync(+this.configService.get('SALT')));
-				const mark2 = performance.now();
-				this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
-				const user = await this.usersRepo.create(params);
-				return baseAnswer(201, user, []);
-			}
-		} catch (err) {
-			next(new HttpError(500, 'Не удалось создать запись пользователя', 'UserService'));
-		}
-	}
+    async createRecord(params: any, next: NextFunction): Promise<BaseAnswer | undefined> {
+        try {
+            let userFromLoginCheck = await this.usersRepo.findByCriteria({ login: params.login });
+            if (userFromLoginCheck.length > 0) {
+                next(new HttpError(400, 'Такой пользователь уже существует', 'UserService'));
+            } else {
+                const mark1 = performance.now();
+                params.password = await hash(
+                    params.password,
+                    genSaltSync(+this.configService.get('SALT'))
+                );
+                const mark2 = performance.now();
+                this.logger.debug(`Шифрование пароля пользователя заняло ${mark2 - mark1}`);
+                const user = await this.usersRepo.create(params);
+                return baseAnswer(201, user, []);
+            }
+        } catch (err) {
+            next(new HttpError(500, 'Не удалось создать запись пользователя', 'UserService'));
+        }
+    }
 
-	async findAll(next: NextFunction) {}
+    async findAll(next: NextFunction) {
+        try {
+            let users = await this.usersRepo.findAll();
+            return baseAnswer(200, users, []);
+        } catch (err) {
+            next(new HttpError(500, 'Error while finding users by params', 'UserService'));
+        }
+    }
 
-	async getUserById(userID: string, next: NextFunction) {}
+    async getUserById(userID: string, next: NextFunction) {
+        try {
+            const user = await this.usersRepo.findById(userID);
+            if (!user) {
+                throw new Error();
+            } else {
+                return baseAnswer(200, user, []);
+            }
+        } catch (err) {
+            next(new HttpError(500, 'User not found by id', 'UserService'));
+        }
+    }
 
-	async login(userCredentials: { login: string; password: string }, next: NextFunction) {
-		try {
-			const findedUser = await this.usersRepo.findByCriteria({ login: userCredentials.login });
-			if (findedUser.length == 0) {
-				next(new HttpError(500, 'Login is incorrect', 'UserService'));
-			} else {
-				let compareResult = await compare(userCredentials.password, findedUser[0].password);
-				if (!!compareResult) {
-					this.logger.log(`The user ${findedUser[0].login} was authorized`);
-					let recordId = uuidv1();
-					this.usersLogsRepo.create({
-						id: recordId,
-						message: 'login',
-						userId: findedUser[0].id,
-					});
-					return baseAnswer(200, { user: { ...findedUser[0] }, isAuth: true }, []);
-				} else {
-					next(new HttpError(500, 'Password is incorrect', 'UserService'));
-				}
-			}
-		} catch (error) {
-			next(new HttpError(500, 'Error while login', 'UserService'));
-		}
-	}
+    async login(userCredentials: { login: string; password: string }, next: NextFunction) {
+        try {
+            const findedUser = await this.usersRepo.findByCriteria({
+                login: userCredentials.login,
+            });
+            if (findedUser.length == 0) {
+                next(new HttpError(500, 'Login is incorrect', 'UserService'));
+            } else {
+                let compareResult = await compare(userCredentials.password, findedUser[0].password);
+                if (!!compareResult) {
+                    this.logger.log(`The user ${findedUser[0].login} was authorized`);
+                    let recordId = uuidv1();
+                    this.usersLogsRepo.create({
+                        id: recordId,
+                        message: 'login',
+                        userId: findedUser[0].id,
+                    });
+                    return baseAnswer(200, { user: { ...findedUser[0] }, isAuth: true }, []);
+                } else {
+                    next(new HttpError(500, 'Password is incorrect', 'UserService'));
+                }
+            }
+        } catch (error) {
+            next(new HttpError(500, 'Error while login', 'UserService'));
+        }
+    }
 
-	async logout(login: string, userEntity: any, usersLogsEntity: any, next: NextFunction) {}
+    async findUsersByParams(params: any, next: NextFunction) {
+        try {
+            let users = await this.usersRepo.findByCriteria(params);
+            if (!users) {
+                throw new Error();
+            } else {
+                return baseAnswer(200, users, []);
+            }
+        } catch (err) {
+            next(new HttpError(500, 'Users not found by params', 'UserService'));
+        }
+    }
+
+    async logout(userId: string, next: NextFunction) {
+        try {
+            let user = await this.getUserById(userId, next);
+            if (!!user) {
+                let recordId = uuidv1();
+                this.usersLogsRepo.create({ id: recordId, userId: userId, message: 'logout' });
+                return baseAnswer(200, { isAuth: false }, []);
+            }
+        } catch (err) {
+            new HttpError(500, 'Error while logout user');
+        }
+    }
 }
