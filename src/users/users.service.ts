@@ -31,7 +31,7 @@ export class UserService {
         try {
             let userFromLoginCheck = await this.usersRepo.findByCriteria({ login: params.login });
             if (userFromLoginCheck.length > 0) {
-                next(new HttpError(400, 'Такой пользователь уже существует', 'UserService'));
+                next(new HttpError(400, 'Такой пользователь уже существует', 'UserService', 6));
             } else {
                 const mark1 = performance.now();
                 params.password = await hash(
@@ -44,7 +44,7 @@ export class UserService {
                 return baseAnswer(201, user, []);
             }
         } catch (err) {
-            next(new HttpError(500, 'Не удалось создать запись пользователя', 'UserService'));
+            next(new HttpError(500, 'Не удалось создать запись пользователя', 'UserService', 11));
         }
     }
 
@@ -53,7 +53,7 @@ export class UserService {
             let users = await this.usersRepo.findAll();
             return baseAnswer(200, users, []);
         } catch (err) {
-            next(new HttpError(500, 'Error while finding users by params', 'UserService'));
+            next(new HttpError(500, 'Error while finding users by params', 'UserService', 7));
         }
     }
 
@@ -66,7 +66,7 @@ export class UserService {
                 return baseAnswer(200, user, []);
             }
         } catch (err) {
-            next(new HttpError(500, 'User not found by id', 'UserService'));
+            next(new HttpError(500, 'User not found by id', 'UserService', 5));
         }
     }
 
@@ -76,7 +76,7 @@ export class UserService {
                 login: userCredentials.login,
             });
             if (findedUser.length == 0) {
-                next(new HttpError(500, 'Login is incorrect', 'UserService'));
+                next(new HttpError(500, 'Login is incorrect', 'UserService', 1));
             } else {
                 let compareResult = await compare(userCredentials.password, findedUser[0].password);
                 if (!!compareResult) {
@@ -89,11 +89,11 @@ export class UserService {
                     });
                     return baseAnswer(200, { user: { ...findedUser[0] }, isAuth: true }, []);
                 } else {
-                    next(new HttpError(500, 'Password is incorrect', 'UserService'));
+                    next(new HttpError(500, 'Password is incorrect', 'UserService', 2));
                 }
             }
         } catch (error) {
-            next(new HttpError(500, 'Error while login', 'UserService'));
+            next(new HttpError(500, 'Error while login', 'UserService', 7));
         }
     }
 
@@ -106,7 +106,7 @@ export class UserService {
                 return baseAnswer(200, users, []);
             }
         } catch (err) {
-            next(new HttpError(500, 'Users not found by params', 'UserService'));
+            next(new HttpError(500, 'Users not found by params', 'UserService', 7));
         }
     }
 
@@ -119,7 +119,7 @@ export class UserService {
                 return baseAnswer(200, { isAuth: false }, []);
             }
         } catch (err) {
-            new HttpError(500, 'Error while logout user');
+            new HttpError(500, 'Error while logout user', 'UserService', 7);
         }
     }
 }

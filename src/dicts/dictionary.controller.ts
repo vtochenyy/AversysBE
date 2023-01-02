@@ -34,7 +34,7 @@ export class DictionaryController extends BaseController {
             let data = await this.dictService.getErrors(next);
             data && res.status(data.status).send(data);
         } catch (err) {
-            next(new HttpError(400, 'Query is incorrect', 'DictionaryController'));
+            next(new HttpError(400, 'Query is incorrect', 'DictionaryController', 9));
         }
     }
 }

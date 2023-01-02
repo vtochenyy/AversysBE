@@ -68,7 +68,7 @@ export class UsersController extends BaseController {
             }
         } catch (err) {
             this.loggerService.err(err);
-            next(new HttpError(400, 'Неверно сформирован запрос', 'UsersController'));
+            next(new HttpError(400, 'Неверно сформирован запрос', 'UsersController', 3));
         }
     }
 
@@ -82,7 +82,7 @@ export class UsersController extends BaseController {
                 data && res.status(data.status).send(data);
             }
         } catch (err) {
-            next(new HttpError(400, 'Error', 'UserController'));
+            next(new HttpError(400, 'Error', 'UserController', 3));
         }
     }
 
@@ -95,7 +95,7 @@ export class UsersController extends BaseController {
                 data && res.status(data.status).send(data);
             }
         } catch (err) {
-            next();
+            next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }
 
@@ -104,7 +104,7 @@ export class UsersController extends BaseController {
             let data = await this.userService.findUsersByParams(req.body, next);
             data && res.status(data.status).send(data);
         } catch (err) {
-            next();
+            next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }
 
@@ -115,7 +115,7 @@ export class UsersController extends BaseController {
                 data && res.status(data.status).send(data);
             }
         } catch (err) {
-            next(new HttpError(400, 'Query is incorrect', 'UserController'));
+            next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }
 
@@ -124,7 +124,7 @@ export class UsersController extends BaseController {
             let data = await this.userService.findAll(next);
             data && res.status(data.status).send(data);
         } catch (err) {
-            next(new HttpError(400, 'Query is incorrect', 'UserController'));
+            next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }
 }

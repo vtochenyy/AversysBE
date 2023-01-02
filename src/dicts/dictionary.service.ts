@@ -16,7 +16,7 @@ export class DictionaryService {
             let errors = [...errorsList.data];
             return baseAnswer(200, errors, []);
         } catch (error) {
-            next(new HttpError(500, 'Errors not found', 'DictionaryService'));
+            next(new HttpError(500, 'Errors not found', 'DictionaryService', 10));
         }
     }
 }
