@@ -20,6 +20,7 @@ import { UsersRepository } from './users/users.repository';
 import { IUsersRepository } from './users/usersRepositoty.interface';
 import { IUsersLogsRepository } from './users/usersLogs/usersLogsRepository.interface';
 import { UsersLogsRepository } from './users/usersLogs/usersLogs.repository';
+import {DictionaryRepository} from "./dicts/dictionary.repository";
 
 //Agregation root
 const appContainer = new Container(); 
@@ -35,6 +36,8 @@ function bindDeps(){
     appContainer.bind<IUsersLogsRepository>(TYPES.UsersLogsRepository).to(UsersLogsRepository).inSingletonScope();
     appContainer.bind<OrganizationsController>(TYPES.OrganizationsController).to(OrganizationsController).inSingletonScope();
     appContainer.bind<DictionaryController>(TYPES.DictionaryController).to(DictionaryController).inSingletonScope();
+    appContainer.bind<DictionaryService>(TYPES.DictionaryService).to(DictionaryService).inSingletonScope();
+    appContainer.bind<DictionaryRepository>(TYPES.DictionaryRepository).to(DictionaryRepository).inSingletonScope();
     appContainer.bind<IDatabaseService>(TYPES.DatabaseService).to(DatabaseService).inSingletonScope();
 }
 bindDeps();
