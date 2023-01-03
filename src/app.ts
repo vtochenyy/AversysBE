@@ -40,8 +40,10 @@ export class App {
             res.header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
             this.logger.log([
                 'Получен исходящий запрос',
-                'HEADERS: ' + JSON.stringify(req.headers),
-                'BODY: ' + JSON.stringify(req.body),
+                '[METHOD]: ' + JSON.stringify(req.method),
+                '[URL]: ' + JSON.stringify(req.headers.host) + req.url,
+                '[HEADERS]: ' + JSON.stringify(req.headers),
+                '[BODY]: ' + JSON.stringify(req.body),
             ]);
             next();
         });
