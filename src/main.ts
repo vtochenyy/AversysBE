@@ -21,6 +21,9 @@ import { IUsersRepository } from './users/usersRepositoty.interface';
 import { IUsersLogsRepository } from './users/usersLogs/usersLogsRepository.interface';
 import { UsersLogsRepository } from './users/usersLogs/usersLogs.repository';
 import {DictionaryRepository} from "./dicts/dictionary.repository";
+import {ICryptoService} from "./crypto/CryptoService.inteface";
+import {CryptoService} from "./crypto/Crypto.service";
+import {VerifyToken} from "./crypto/VerifyToken";
 
 //Agregation root
 const appContainer = new Container(); 
@@ -39,6 +42,8 @@ function bindDeps(){
     appContainer.bind<DictionaryService>(TYPES.DictionaryService).to(DictionaryService).inSingletonScope();
     appContainer.bind<DictionaryRepository>(TYPES.DictionaryRepository).to(DictionaryRepository).inSingletonScope();
     appContainer.bind<IDatabaseService>(TYPES.DatabaseService).to(DatabaseService).inSingletonScope();
+    appContainer.bind<ICryptoService>(TYPES.CryptoService).to(CryptoService).inSingletonScope();
+    appContainer.bind<VerifyToken>(TYPES.VerifyToken).to(VerifyToken).inSingletonScope();
 }
 bindDeps();
 

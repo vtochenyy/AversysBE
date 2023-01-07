@@ -20,10 +20,10 @@ export class UsersRepository implements IUsersRepository {
         return user;
     }
 
-    async update(userId: string, userData: UserModel) {
+    async update(userId: string, userData: any) {
         let result = await this.client.userModel.update({
             where: { id: userId },
-            data: userData,
+            data: { ...userData },
         });
         return result;
     }

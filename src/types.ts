@@ -1,3 +1,5 @@
+import { VerifyToken } from './crypto/VerifyToken';
+
 export const TYPES = {
     Application: Symbol.for('Application'),
     ILogger: Symbol.for('ILogger'),
@@ -16,4 +18,7 @@ export const TYPES = {
     DictionaryRepository: Symbol.for('DictionaryRepository'),
 
     DatabaseService: Symbol.for('DatabaseService'),
+
+    CryptoService: Symbol.for('CryptoService'),
+    VerifyToken: Symbol.for('VerifyToken'),
 };

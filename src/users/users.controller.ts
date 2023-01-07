@@ -60,7 +60,7 @@ export class UsersController extends BaseController {
                 path: '/getActivityByUserId',
                 method: 'get',
                 func: this.getUserActivity,
-            }
+            },
         ]);
     }
 
@@ -83,7 +83,8 @@ export class UsersController extends BaseController {
             if (!!req.body.login && !!req.body.password) {
                 let data = await this.userService.login(
                     { login: req.body.login, password: req.body.password },
-                    next
+                    next,
+                    res
                 );
                 data && res.status(data.status).send(data);
             }
@@ -134,15 +135,24 @@ export class UsersController extends BaseController {
         }
     }
 
-    async getUserActivity(req: Request, res: Response, next: NextFunction){
-        try{
-            if (!!req.query.take && !!req.query.skip && !!req.query.userId && typeof req.query.userId === 'string'){
-                let data = await this.userService.getUserActivity(req.query.userId, {take: +req.query.take, skip: +req.query.skip}, next);
+    async getUserActivity(req: Request, res: Response, next: NextFunction) {
+        try {
+            if (
+                !!req.query.take &&
+                !!req.query.skip &&
+                !!req.query.userId &&
+                typeof req.query.userId === 'string'
+            ) {
+                let data = await this.userService.getUserActivity(
+                    req.query.userId,
+                    { take: +req.query.take, skip: +req.query.skip },
+                    next
+                );
                 data && res.status(data.status).send(data);
             } else {
                 throw new Error();
             }
-        } catch (err){
+        } catch (err) {
             next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }

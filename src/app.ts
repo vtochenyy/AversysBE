@@ -10,8 +10,10 @@ import swaggerDocument from '../backendAPI.json';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
 import { DictionaryController } from './dicts/dictionary.controller';
-import 'reflect-metadata';
 import { IDatabaseService } from './db/databaseService.interface';
+import { VerifyToken } from './crypto/VerifyToken';
+import cookieParser from 'cookie-parser';
+import 'reflect-metadata';
 
 @injectable()
 export class App {
@@ -26,7 +28,8 @@ export class App {
         @inject(TYPES.OrganizationsController)
         private organizationController: OrganizationsController,
         @inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter,
-        @inject(TYPES.DatabaseService) private databaseService: IDatabaseService
+        @inject(TYPES.DatabaseService) private databaseService: IDatabaseService,
+        @inject(TYPES.VerifyToken) private verifyToken: VerifyToken
     ) {
         this.app = express();
         this.port = 9876;
@@ -34,6 +37,7 @@ export class App {
 
     public useRoutes() {
         this.app.use(express.json());
+        this.app.use(cookieParser());
         this.app.use(cors());
         this.app.use((req: Request, res: Response, next: NextFunction) => {
             res.header('Access-Control-Allow-Origin', '*');
@@ -45,6 +49,8 @@ export class App {
                 '[HEADERS]: ' + JSON.stringify(req.headers),
                 '[BODY]: ' + JSON.stringify(req.body),
             ]);
+            req.originalUrl !== '/users/login' &&
+                this.verifyToken.veryfiUserTokenFromCookie(req.cookies.token, next);
             next();
         });
         // next внутри контроллеров не вызывает другой контроллер, т.к. они являются элементами маршрутизации,

@@ -1,6 +1,5 @@
-import { NextFunction } from 'express';
+import { NextFunction, Response } from 'express';
 import { v1 as uuidv1 } from 'uuid';
-// import { UserModel, UsersLogsModel } from '@prisma/client';
 import { HttpError } from '../errors/http-error.class';
 import { injectable, inject } from 'inversify';
 import { baseAnswer } from '../common/baseAnswer';
@@ -9,8 +8,9 @@ import { hash, compare, genSaltSync } from 'bcryptjs';
 import { LoggerService } from '../logger/logger.service';
 import { ConfigService } from '../config/config.service';
 import { IUsersRepository } from './usersRepositoty.interface';
-import 'reflect-metadata';
 import { IUsersLogsRepository } from './usersLogs/usersLogsRepository.interface';
+import { ICryptoService } from '../crypto/CryptoService.inteface';
+import 'reflect-metadata';
 
 type BaseAnswer = {
     status: number;
@@ -24,7 +24,8 @@ export class UserService {
         @inject(TYPES.ILogger) private logger: LoggerService,
         @inject(TYPES.ConfigService) private configService: ConfigService,
         @inject(TYPES.UsersRepository) private usersRepo: IUsersRepository,
-        @inject(TYPES.UsersLogsRepository) private usersLogsRepo: IUsersLogsRepository
+        @inject(TYPES.UsersLogsRepository) private usersLogsRepo: IUsersLogsRepository,
+        @inject(TYPES.CryptoService) private cryptoService: ICryptoService
     ) {}
 
     async createRecord(params: any, next: NextFunction): Promise<BaseAnswer | undefined> {
@@ -70,7 +71,11 @@ export class UserService {
         }
     }
 
-    async login(userCredentials: { login: string; password: string }, next: NextFunction) {
+    async login(
+        userCredentials: { login: string; password: string },
+        next: NextFunction,
+        res: Response
+    ) {
         try {
             const findedUser = await this.usersRepo.findByCriteria({
                 login: userCredentials.login,
@@ -87,13 +92,26 @@ export class UserService {
                         message: 'login',
                         userId: findedUser[0].id,
                     });
-                    return baseAnswer(200, { user: { ...findedUser[0] }, isAuth: true }, []);
+                    let token = this.cryptoService.createAccessToken({
+                        userId: findedUser[0].id,
+                        login: findedUser[0].login,
+                    });
+                    this.logger.debug([`${findedUser[0].login} was got a acess token: `, token]);
+                    let newUserData = await this.usersRepo.update(findedUser[0].id, {
+                        token: token,
+                    });
+                    res.cookie('token', newUserData.token);
+                    return baseAnswer(
+                        200,
+                        { user: { ...newUserData, token: true }, isAuth: true },
+                        []
+                    );
                 } else {
                     next(new HttpError(500, 'Password is incorrect', 'UserService', 2));
                 }
             }
         } catch (error) {
-            next(new HttpError(500, 'Error while login', 'UserService', 7));
+            next(new HttpError(500, 'Error while login ' + error, 'UserService', 7));
         }
     }
 
@@ -116,6 +134,7 @@ export class UserService {
             if (!!user) {
                 let recordId = uuidv1();
                 this.usersLogsRepo.create({ id: recordId, userId: userId, message: 'logout' });
+                this.logger.log(`User ${user.data.login} was logout`);
                 return baseAnswer(200, { isAuth: false }, []);
             }
         } catch (err) {
@@ -123,11 +142,15 @@ export class UserService {
         }
     }
 
-    async getUserActivity(userId: string, paging: {take: number, skip: number}, next: NextFunction){
+    async getUserActivity(
+        userId: string,
+        paging: { take: number; skip: number },
+        next: NextFunction
+    ) {
         try {
             let userActivity = await this.usersLogsRepo.getAllRecordsByUserId(userId, paging);
             return baseAnswer(200, userActivity, paging);
-        } catch (err){
+        } catch (err) {
             next(new HttpError(500, 'Error while getting user activity', 'UserService', 7));
         }
     }

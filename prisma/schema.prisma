@@ -26,6 +26,7 @@ model UserModel {
   competence              String?
   UserToOrganizationModel UserToOrganizationModel[]
   UsersLogs               UsersLogsModel[]
+  token                   String?
 }
 
 model UserToOrganizationModel {
