@@ -122,4 +122,13 @@ export class UserService {
             new HttpError(500, 'Error while logout user', 'UserService', 7);
         }
     }
+
+    async getUserActivity(userId: string, paging: {take: number, skip: number}, next: NextFunction){
+        try {
+            let userActivity = await this.usersLogsRepo.getAllRecordsByUserId(userId, paging);
+            return baseAnswer(200, userActivity, paging);
+        } catch (err){
+            next(new HttpError(500, 'Error while getting user activity', 'UserService', 7));
+        }
+    }
 }

@@ -55,6 +55,12 @@ export class UsersController extends BaseController {
                 method: 'get',
                 func: this.findById,
             },
+            {
+                root: '/users',
+                path: '/getActivityByUserId',
+                method: 'get',
+                func: this.getUserActivity,
+            }
         ]);
     }
 
@@ -124,6 +130,19 @@ export class UsersController extends BaseController {
             let data = await this.userService.findAll(next);
             data && res.status(data.status).send(data);
         } catch (err) {
+            next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
+        }
+    }
+
+    async getUserActivity(req: Request, res: Response, next: NextFunction){
+        try{
+            if (!!req.query.take && !!req.query.skip && !!req.query.userId && typeof req.query.userId === 'string'){
+                let data = await this.userService.getUserActivity(req.query.userId, {take: +req.query.take, skip: +req.query.skip}, next);
+                data && res.status(data.status).send(data);
+            } else {
+                throw new Error();
+            }
+        } catch (err){
             next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }

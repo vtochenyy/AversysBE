@@ -21,4 +21,9 @@ export class UsersLogsRepository implements IUsersLogsRepository {
         let result = await this.client.usersLogsModel.findMany();
         return result;
     }
+
+    async getAllRecordsByUserId(id: string, paging: {take: number, skip: number}): Promise<UsersLogsModel[]> {
+        let result = await this.client.usersLogsModel.findMany({where: {userId: id}, take: paging.take, skip: paging.skip});
+        return result;
+    }
 }
