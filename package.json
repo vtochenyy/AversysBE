@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "CLI app with node js",
     "main": "index.js",
+    "proxy":"http://localhost:8080",
     "scripts": {
         "db:update": "npx prisma generate && npx prisma migrate dev",
         "dev": "nodemon",

@@ -36,12 +36,14 @@ export class App {
     }
 
     public useRoutes() {
+        this.app.options('*', cors({credentials: true, origin: 'http://localhost:3000'}));
         this.app.use(express.json());
         this.app.use(cookieParser());
-        this.app.use(cors());
         this.app.use((req: Request, res: Response, next: NextFunction) => {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+            res.setHeader('Access-Control-Allow-Methods','GET, PUT, POST, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Credentials','true');
             this.logger.log([
                 'Получен исходящий запрос',
                 '[METHOD]: ' + JSON.stringify(req.method),

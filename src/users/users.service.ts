@@ -100,7 +100,8 @@ export class UserService {
                     let newUserData = await this.usersRepo.update(findedUser[0].id, {
                         token: token,
                     });
-                    res.cookie('token', newUserData.token);
+                    //res.setHeader('Set-Cookie', `auth_token=${newUserData.token}; HttpOnly;`);
+                    res.cookie('auth_token', newUserData.token, {httpOnly: true, domain: 'localhost'})
                     return baseAnswer(
                         200,
                         { user: { ...newUserData, token: true }, isAuth: true },
