@@ -14,6 +14,7 @@ import { IDatabaseService } from './db/databaseService.interface';
 import { VerifyToken } from './crypto/VerifyToken';
 import cookieParser from 'cookie-parser';
 import 'reflect-metadata';
+import {ResponseHeaderSetter} from "./common/ResponseHeaderSetter";
 
 @injectable()
 export class App {
@@ -39,11 +40,8 @@ export class App {
         this.app.options('*', cors({credentials: true, origin: 'http://localhost:3000'}));
         this.app.use(express.json());
         this.app.use(cookieParser());
+        this.app.use(ResponseHeaderSetter);
         this.app.use((req: Request, res: Response, next: NextFunction) => {
-            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-            res.setHeader('Access-Control-Allow-Methods','GET, PUT, POST, DELETE, OPTIONS');
-            res.setHeader('Access-Control-Allow-Credentials','true');
             this.logger.log([
                 'Получен исходящий запрос',
                 '[METHOD]: ' + JSON.stringify(req.method),
@@ -51,8 +49,8 @@ export class App {
                 '[HEADERS]: ' + JSON.stringify(req.headers),
                 '[BODY]: ' + JSON.stringify(req.body),
             ]);
-            req.originalUrl !== '/users/login' &&
-                this.verifyToken.veryfiUserTokenFromCookie(req.cookies.token, next);
+            req.originalUrl !== '/users/login' && req.originalUrl !== '/users/register' &&
+                this.verifyToken.veryfiUserTokenFromCookie(req.cookies.auth_token, next);
             next();
         });
         // next внутри контроллеров не вызывает другой контроллер, т.к. они являются элементами маршрутизации,

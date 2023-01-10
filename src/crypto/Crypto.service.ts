@@ -30,4 +30,8 @@ export class CryptoService implements ICryptoService {
     verifyAccessToken(token: string): string | jwt.JwtPayload {
         return jwt.verify(token, this.configService.get('TOKEN_SALT'));
     }
+
+    decodeAccessToken(token: string): null | jwt.JwtPayload {
+        return jwt.decode(token, {complete: true, json: true});
+    }
 }

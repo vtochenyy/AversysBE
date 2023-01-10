@@ -61,6 +61,12 @@ export class UsersController extends BaseController {
                 method: 'get',
                 func: this.getUserActivity,
             },
+            {
+                root: '/users',
+                path: '/me',
+                method: 'get',
+                func: this.me,
+            },
         ]);
     }
 
@@ -153,6 +159,19 @@ export class UsersController extends BaseController {
                 throw new Error();
             }
         } catch (err) {
+            next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
+        }
+    }
+
+    async me(req: Request, res: Response, next: NextFunction){
+        try {
+            if (!!req.cookies.auth_token){
+                let data = await this.userService.me(req.cookies.auth_token, next);
+                data && res.status(data.status).send(data);
+            } else {
+                throw new Error();
+            }
+        } catch (err){
             next(new HttpError(400, 'Query is incorrect', 'UserController', 3));
         }
     }

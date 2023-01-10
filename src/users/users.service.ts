@@ -98,6 +98,7 @@ export class UserService {
                     });
                     this.logger.debug([`${findedUser[0].login} was got a acess token: `, token]);
                     let newUserData = await this.usersRepo.update(findedUser[0].id, {
+                        ...findedUser[0],
                         token: token,
                     });
                     //res.setHeader('Set-Cookie', `auth_token=${newUserData.token}; HttpOnly;`);
@@ -153,6 +154,20 @@ export class UserService {
             return baseAnswer(200, userActivity, paging);
         } catch (err) {
             next(new HttpError(500, 'Error while getting user activity', 'UserService', 7));
+        }
+    }
+
+    async me(token: string, next: NextFunction){
+        try {
+            let decodedData = this.cryptoService.decodeAccessToken(token);
+            if (!!decodedData){
+                let userFromToken = await this.usersRepo.findById(decodedData.payload.payload.userId);
+                return baseAnswer(200, {...userFromToken, token: true}, []);
+            } else {
+                throw new Error();
+            }
+        } catch (err){
+            next(new HttpError(500, 'Error while decode auth_token', 'UserService', 12));
         }
     }
 }
