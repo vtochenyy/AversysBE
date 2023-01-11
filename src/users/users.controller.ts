@@ -70,7 +70,7 @@ export class UsersController extends BaseController {
         ]);
     }
 
-    async register(req: Request, res: Response, next: NextFunction) {
+    public async register(req: Request, res: Response, next: NextFunction) {
         try {
             if (!!req.body.login && !!req.body.password) {
                 let data = await this.userService.createRecord(req.body, next);
@@ -84,7 +84,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async login(req: Request, res: Response, next: NextFunction) {
+    public async login(req: Request, res: Response, next: NextFunction) {
         try {
             if (!!req.body.login && !!req.body.password) {
                 let data = await this.userService.login(
@@ -99,7 +99,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async findById(req: Request, res: Response, next: NextFunction) {
+    public async findById(req: Request, res: Response, next: NextFunction) {
         try {
             if (!!req.query.id) {
                 let data =
@@ -112,7 +112,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async findByParams(req: Request, res: Response, next: NextFunction) {
+    public async findByParams(req: Request, res: Response, next: NextFunction) {
         try {
             let data = await this.userService.findUsersByParams(req.body, next);
             data && res.status(data.status).send(data);
@@ -121,7 +121,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async logout(req: Request, res: Response, next: NextFunction) {
+    public async logout(req: Request, res: Response, next: NextFunction) {
         try {
             if (req.body.id && typeof req.body.id === 'string') {
                 let data = await this.userService.logout(req.body.id, next);
@@ -132,7 +132,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async findAllUsers(req: Request, res: Response, next: NextFunction) {
+    public async findAllUsers(req: Request, res: Response, next: NextFunction) {
         try {
             let data = await this.userService.findAll(next);
             data && res.status(data.status).send(data);
@@ -141,7 +141,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async getUserActivity(req: Request, res: Response, next: NextFunction) {
+    public async getUserActivity(req: Request, res: Response, next: NextFunction) {
         try {
             if (
                 !!req.query.take &&
@@ -163,7 +163,7 @@ export class UsersController extends BaseController {
         }
     }
 
-    async me(req: Request, res: Response, next: NextFunction){
+    public async me(req: Request, res: Response, next: NextFunction){
         try {
             if (!!req.cookies.auth_token){
                 let data = await this.userService.me(req.cookies.auth_token, next);

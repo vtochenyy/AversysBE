@@ -28,7 +28,7 @@ export class UserService {
         @inject(TYPES.CryptoService) private cryptoService: ICryptoService
     ) {}
 
-    async createRecord(params: any, next: NextFunction): Promise<BaseAnswer | undefined> {
+    public async createRecord(params: any, next: NextFunction): Promise<BaseAnswer | undefined> {
         try {
             let userFromLoginCheck = await this.usersRepo.findByCriteria({ login: params.login });
             if (userFromLoginCheck.length > 0) {
@@ -49,7 +49,7 @@ export class UserService {
         }
     }
 
-    async findAll(next: NextFunction) {
+    public async findAll(next: NextFunction) {
         try {
             let users = await this.usersRepo.findAll();
             return baseAnswer(200, users, []);
@@ -58,7 +58,7 @@ export class UserService {
         }
     }
 
-    async getUserById(userID: string, next: NextFunction) {
+    public async getUserById(userID: string, next: NextFunction) {
         try {
             const user = await this.usersRepo.findById(userID);
             if (!user) {
@@ -71,7 +71,7 @@ export class UserService {
         }
     }
 
-    async login(
+    public async login(
         userCredentials: { login: string; password: string },
         next: NextFunction,
         res: Response
@@ -117,7 +117,7 @@ export class UserService {
         }
     }
 
-    async findUsersByParams(params: any, next: NextFunction) {
+    public async findUsersByParams(params: any, next: NextFunction) {
         try {
             let users = await this.usersRepo.findByCriteria(params);
             if (!users) {
@@ -130,7 +130,7 @@ export class UserService {
         }
     }
 
-    async logout(userId: string, next: NextFunction) {
+    public async logout(userId: string, next: NextFunction) {
         try {
             let user = await this.getUserById(userId, next);
             if (!!user) {
@@ -144,7 +144,7 @@ export class UserService {
         }
     }
 
-    async getUserActivity(
+    public async getUserActivity(
         userId: string,
         paging: { take: number; skip: number },
         next: NextFunction
@@ -157,7 +157,7 @@ export class UserService {
         }
     }
 
-    async me(token: string, next: NextFunction){
+    public async me(token: string, next: NextFunction){
         try {
             let decodedData = this.cryptoService.decodeAccessToken(token);
             if (!!decodedData){

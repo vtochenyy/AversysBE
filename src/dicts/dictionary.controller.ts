@@ -29,7 +29,7 @@ export class DictionaryController extends BaseController {
         ]);
     }
 
-    async getErrors(req: Request, res: Response, next: NextFunction) {
+    public async getErrors(req: Request, res: Response, next: NextFunction) {
         try {
             let data = await this.dictService.getErrors(next);
             data && res.status(data.status).send(data);

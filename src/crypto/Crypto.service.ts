@@ -20,18 +20,18 @@ export class CryptoService implements ICryptoService {
             expires: this.configService.get('TOKEN_EXPIRES'),
         };
     }
-    createAccessToken(payload: tokenPayload): string {
+    public createAccessToken(payload: tokenPayload): string {
         return jwt.sign({ payload: payload }, this.configService.get('TOKEN_SALT'), {
             algorithm: 'HS512',
             expiresIn: this.configService.get('TOKEN_EXPIRES'),
         });
     }
 
-    verifyAccessToken(token: string): string | jwt.JwtPayload {
+    public verifyAccessToken(token: string): string | jwt.JwtPayload {
         return jwt.verify(token, this.configService.get('TOKEN_SALT'));
     }
 
-    decodeAccessToken(token: string): null | jwt.JwtPayload {
+    public decodeAccessToken(token: string): null | jwt.JwtPayload {
         return jwt.decode(token, {complete: true, json: true});
     }
 }

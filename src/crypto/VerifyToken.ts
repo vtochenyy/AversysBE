@@ -12,7 +12,7 @@ export class VerifyToken {
         @inject(TYPES.ILogger) private logger: ILogger
     ) {}
 
-    veryfiUserTokenFromCookie(token: string | undefined, next: NextFunction): void {
+    public veryfiUserTokenFromCookie(token: string | undefined, next: NextFunction): void {
         try {
             this.logger.debug(['token from query cookie', token]);
             let veryfiedToken = token && this.cryptoService.verifyAccessToken(token);

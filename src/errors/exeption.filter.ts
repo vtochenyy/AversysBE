@@ -12,7 +12,7 @@ export class ExeptionFilter implements IExeptionFilter {
         this.logger.log('Зарегистрирован обрбаотчик ошибок');
     }
 
-    catch(err: Error | HttpError, req: Request, res: Response, next: NextFunction) {
+    public catch(err: Error | HttpError, req: Request, res: Response, next: NextFunction) {
         if (err instanceof HttpError) {
             this.logger.err(`[${err.context}] Ошибка ${err.statusCode} ${err.message}`);
             res.status(err.statusCode).send({

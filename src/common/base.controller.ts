@@ -16,7 +16,7 @@ export abstract class BaseController {
 		this._ = lodash;
 	}
 
-	get router() {
+	public get router() {
 		return this._router;
 	}
 

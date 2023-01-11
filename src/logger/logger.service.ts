@@ -15,19 +15,19 @@ export class LoggerService implements ILogger {
         });
     }
 
-    log(...args: unknown[]) {
+    public log(...args: unknown[]) {
         this.logger.info(...args);
     }
 
-    err(...args: unknown[]) {
+    public err(...args: unknown[]) {
         this.logger.error(...args);
     }
 
-    warn(...args: unknown[]) {
+    public warn(...args: unknown[]) {
         this.logger.warn(...args);
     }
 
-    debug(...args: unknown[]) {
+    public debug(...args: unknown[]) {
         this.logger.debug(...args);
     }
 }

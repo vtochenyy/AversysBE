@@ -12,7 +12,7 @@ export class DictionaryRepository {
         this.client = databaseService.client;
     }
 
-    async getAllErrors(): Promise<ErrorDictModel[]> {
+    public async getAllErrors(): Promise<ErrorDictModel[]> {
         const errors = await this.client.errorDictModel.findMany();
         return errors;
     }

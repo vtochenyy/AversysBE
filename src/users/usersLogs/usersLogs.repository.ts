@@ -13,16 +13,16 @@ export class UsersLogsRepository implements IUsersLogsRepository {
         this.client = this.databaseService.client;
     }
 
-    async create(params: { id: string; message: string; userId: string }) {
+    public async create(params: { id: string; message: string; userId: string }) {
         let data = await this.client.usersLogsModel.create({ data: params });
     }
 
-    async getAll(): Promise<UsersLogsModel[]> {
+    public async getAll(): Promise<UsersLogsModel[]> {
         let result = await this.client.usersLogsModel.findMany();
         return result;
     }
 
-    async getAllRecordsByUserId(id: string, paging: {take: number, skip: number}): Promise<UsersLogsModel[]> {
+    public async getAllRecordsByUserId(id: string, paging: {take: number, skip: number}): Promise<UsersLogsModel[]> {
         let result = await this.client.usersLogsModel.findMany({where: {userId: id}, take: paging.take, skip: paging.skip});
         return result;
     }

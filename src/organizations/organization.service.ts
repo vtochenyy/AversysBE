@@ -9,7 +9,7 @@ import 'reflect-metadata';
 @injectable()
 export class OrganizationService {
 	constructor() {}
-	async createRecord(
+	public async createRecord(
 		params: IOrganizationDto,
 		organizationEntity: any,
 		organizationToExpansesEnity: any,
@@ -21,14 +21,14 @@ export class OrganizationService {
 		}
 	}
 
-	async findAll(organizationEntity: any, next: NextFunction) {
+	public async findAll(organizationEntity: any, next: NextFunction) {
 		try {
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'OrganizationService'));
 		}
 	}
 
-	async findByParams(params: any, organizationEntity: any, next: NextFunction) {
+	public async findByParams(params: any, organizationEntity: any, next: NextFunction) {
 		try {
 		} catch (error) {
 			next(new HttpError(500, 'Service error', 'OrganizationService'));

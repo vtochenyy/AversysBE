@@ -14,13 +14,13 @@ export class UsersRepository implements IUsersRepository {
         this.client = this.databaseService.client;
     }
 
-    async create(params: UserModel) {
+    public async create(params: UserModel) {
         params.id = uuidv1();
         let user = await this.client.userModel.create({ data: params });
         return user;
     }
 
-    async update(userId: string, userData: any) {
+    public async update(userId: string, userData: any) {
         let result = await this.client.userModel.update({
             where: { id: userId },
             data: { ...userData },
@@ -28,19 +28,19 @@ export class UsersRepository implements IUsersRepository {
         return result;
     }
 
-    async findById(userId: string) {
+    public async findById(userId: string) {
         let result = await this.client.userModel.findUnique({
             where: { id: userId },
         });
         return result;
     }
 
-    async findAll() {
+    public async findAll() {
         let result = await this.client.userModel.findMany();
         return result;
     }
 
-    async findByCriteria(userData: any): Promise<UserModel[]> {
+    public async findByCriteria(userData: any): Promise<UserModel[]> {
         let result = await this.client.userModel.findMany({
             where: {
                 ...userData,
@@ -49,7 +49,7 @@ export class UsersRepository implements IUsersRepository {
         return result;
     }
 
-    async deleteById(userId: string) {
+    public async deleteById(userId: string) {
         try {
             this.client.userModel.delete({ where: { id: userId } });
             return true;

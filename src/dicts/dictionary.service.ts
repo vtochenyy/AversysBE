@@ -11,7 +11,7 @@ import 'reflect-metadata';
 export class DictionaryService {
     constructor(@inject(TYPES.ILogger) private logger: LoggerService) {}
 
-    async getErrors(next: NextFunction) {
+    public async getErrors(next: NextFunction) {
         try {
             let errors = [...errorsList.data];
             return baseAnswer(200, errors, []);
